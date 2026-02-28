@@ -3,50 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VNC Investimentos | Simulador</title>
+    <title>VNC Investimentos | Simulador Oficial</title>
     <style>
-        :root { --vnc-blue: #004080; --vnc-light: #f8fafc; --text: #333; }
-        body { font-family: 'Arial', sans-serif; background: var(--vnc-light); margin: 0; color: var(--text); }
+        :root { --blue: #004a99; --light: #f4f7f6; --gray: #666; --green: #25d366; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--light); margin: 0; color: #333; }
         
-        .header { background: var(--vnc-blue); color: white; padding: 20px; text-align: center; font-weight: bold; text-transform: uppercase; }
+        .header { background: var(--blue); color: white; padding: 20px; text-align: center; font-size: 1.5rem; font-weight: bold; letter-spacing: 2px; }
         .container { max-width: 900px; margin: 20px auto; padding: 15px; }
 
-        /* Grid de Imagens */
-        .grid-bens { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        /* Grid de Imagens Reais */
+        .grid-bens { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 30px; }
         .card-item { 
-            height: 120px; border-radius: 12px; cursor: pointer; border: 4px solid white;
-            display: flex; align-items: flex-end; justify-content: center; padding-bottom: 10px;
+            height: 110px; border-radius: 10px; cursor: pointer; border: 3px solid white;
+            display: flex; align-items: flex-end; justify-content: center;
             background-size: cover; background-position: center; transition: 0.3s;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2); position: relative; overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: relative;
         }
         .card-item span { 
-            position: relative; z-index: 2; color: white; font-weight: bold; 
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8); background: rgba(0,0,0,0.3); width: 100%; text-align: center;
+            background: rgba(0, 74, 153, 0.8); color: white; width: 100%; 
+            text-align: center; font-size: 0.7rem; font-weight: bold; padding: 5px 0; border-radius: 0 0 7px 7px;
         }
-        .card-item.active { border-color: #007bff; transform: scale(1.05); }
+        .card-item.active { border-color: var(--blue); transform: scale(1.05); }
 
-        /* Fotos de Fundo */
-        .btn-moto { background-image: url('https://images.unsplash.com/photo-1558981403-c5f91cbba527?w=400'); }
-        .btn-carro { background-image: url('https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=400'); }
-        .btn-casa { background-image: url('https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400'); }
-        .btn-maquina { background-image: url('https://images.unsplash.com/photo-1533991505870-b5c4683a3070?w=400'); }
+        /* Fotos das Categorias */
+        .btn-moto { background-image: url('https://images.unsplash.com/photo-1558981403-c5f91cbba527?w=300'); }
+        .btn-carro { background-image: url('https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=300'); }
+        .btn-casa { background-image: url('https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=300'); }
+        .btn-maquina { background-image: url('https://images.unsplash.com/photo-1533991505870-b5c4683a3070?w=300'); }
+        .btn-servico { background-image: url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=300'); }
 
-        /* Inputs */
-        .input-box { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        /* Entradas de Valores */
+        .input-box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
         .field { margin-bottom: 15px; }
-        .field label { display: block; font-size: 12px; font-weight: bold; color: #666; margin-bottom: 5px; }
-        .field input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 18px; box-sizing: border-box; }
+        .field label { display: block; font-size: 0.8rem; font-weight: bold; color: var(--blue); margin-bottom: 5px; }
+        .field input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 1.1rem; box-sizing: border-box; }
 
-        /* Resultados */
-        .results { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .res-card { background: white; padding: 20px; border-radius: 12px; border-top: 5px solid #ccc; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .res-card.vnc { border-top-color: var(--vnc-blue); background: #f0f7ff; }
-        .price { font-size: 24px; font-weight: 900; color: var(--vnc-blue); margin: 10px 0; }
+        /* Resultados Lado a Lado */
+        .results { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .res-card { background: white; padding: 20px; border-radius: 12px; border: 1px solid #ddd; position: relative; }
+        .res-card.vnc { border: 2px solid var(--blue); background: #f0f7ff; }
         
-        .btn-zap { 
-            display: block; width: 100%; padding: 20px; background: #25D366; color: white; 
-            border: none; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 20px;
-        }
+        .res-card h3 { margin: 0 0 10px 0; font-size: 0.9rem; color: var(--gray); text-transform: uppercase; }
+        .price { font-size: 1.6rem; font-weight: 800; color: #d9534f; margin: 10px 0; }
+        .vnc .price { color: var(--blue); }
+
+        .info-list { font-size: 0.75rem; color: #555; padding: 0; list-style: none; }
+        .info-list li { margin-bottom: 8px; padding-left: 15px; position: relative; }
+        .info-list li::before { content: "•"; position: absolute; left: 0; color: var(--blue); font-weight: bold; }
+
+        /* Controle de Parcela/Prazo */
+        .slider-box { margin-top: 15px; text-align: center; }
+        input[type=range] { width: 100%; accent-color: var(--blue); cursor: pointer; }
+
+        /* Form contato */
+        .footer-form { background: #fff; padding: 25px; border-radius: 12px; margin-top: 25px; border: 1px solid #ddd; text-align: center; }
+        .footer-form input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box; }
+        .btn-zap { background: var(--green); color: white; border: none; padding: 18px; width: 100%; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-zap:hover { background: #1eb954; transform: scale(1.02); }
 
         @media (max-width: 600px) { .results { grid-template-columns: 1fr; } }
     </style>
@@ -57,25 +70,25 @@
 
 <div class="container">
     <div class="grid-bens">
-        <div class="card-item btn-moto active" onclick="selecionar(this, 'Moto', 0.19, 0.40)"><span>MOTOS</span></div>
-        <div class="card-item btn-carro" onclick="selecionar(this, 'Carro', 0.21, 0.40)"><span>CARROS</span></div>
-        <div class="card-item btn-casa" onclick="selecionar(this, 'Imóvel', 0.25, 0.75)"><span>IMÓVEIS</span></div>
-        <div class="card-item btn-maquina" onclick="selecionar(this, 'Maquinário', 0.25, 0.75)"><span>MÁQUINAS</span></div>
+        <div class="card-item btn-moto active" onclick="selectCat(this, 'Moto', 0.19, 0.40)"><span>MOTOS</span></div>
+        <div class="card-item btn-carro" onclick="selectCat(this, 'Carro', 0.21, 0.40)"><span>CARROS</span></div>
+        <div class="card-item btn-casa" onclick="selectCat(this, 'Imóvel', 0.25, 0.75)"><span>IMÓVEIS</span></div>
+        <div class="card-item btn-maquina" onclick="selectCat(this, 'Maquinário', 0.25, 0.75)"><span>MÁQUINAS</span></div>
+        <div class="card-item btn-servico" onclick="selectCat(this, 'Serviços', 0.20, 0.35)"><span>SERVIÇOS</span></div>
     </div>
 
     <div class="input-box">
         <div class="field">
-            <label>VALOR TOTAL (R$)</label>
-            <input type="number" id="vTotal" value="50000" oninput="calcular()">
+            <label>VALOR DO BEM (R$)</label>
+            <input type="number" id="vTotal" value="50000" oninput="calc()">
         </div>
         <div class="field">
-            <label>ENTRADA (R$)</label>
-            <input type="number" id="vEntrada" value="10000" oninput="calcular()">
+            <label>ENTRADA DISPONÍVEL (R$)</label>
+            <input type="number" id="vEntrada" value="5000" oninput="calc()">
         </div>
-        <div class="field">
-            <label>PRAZO (MESES)</label>
-            <input type="range" id="prazo" min="12" max="120" value="48" oninput="calcular()">
-            <div style="text-align: center; font-weight: bold; color: var(--vnc-blue);" id="txtPrazo">48 meses</div>
+        <div class="slider-box">
+            <label style="font-size: 0.8rem; font-weight: bold; color: var(--blue);">ESCOLHA O PRAZO: <span id="txtPrazo">48</span> MESES</label>
+            <input type="range" id="prazo" min="12" max="120" value="48" oninput="calc()">
         </div>
     </div>
 
@@ -83,58 +96,70 @@
         <div class="res-card">
             <h3>Financiamento</h3>
             <div class="price" id="resFinan">R$ 0,00</div>
-            <p style="font-size: 12px; color: #999;">Análise de crédito rigorosa</p>
+            <ul class="info-list">
+                <li>Juros de até 1.99% a.m.</li>
+                <li>Exige Nome Limpo</li>
+                <li>Exige Score Alto</li>
+                <li>Exige CNH</li>
+                <li>Alienação Bancária</li>
+            </ul>
         </div>
+
         <div class="res-card vnc">
             <h3>Plano Empresa VNC</h3>
             <div class="price" id="resVNC">R$ 0,00</div>
-            <p style="font-size: 12px; color: #666;">Sem consulta de score</p>
+            <ul class="info-list">
+                <li><b>Aprovação Facilitada</b></li>
+                <li><b>Sem Consulta de Score</b></li>
+                <li>Aceitamos Score Baixo</li>
+                <li><b>Não Exige CNH</b></li>
+                <li>Taxa Administrativa Reduzida</li>
+            </ul>
         </div>
     </div>
 
-    <div style="background: #eee; padding: 20px; border-radius: 15px; margin-top: 30px;">
-        <input type="text" id="nome" placeholder="Seu Nome" style="width:100%; padding:12px; margin-bottom:10px; border-radius:8px; border:1px solid #ccc;">
-        <input type="tel" id="tel" placeholder="Seu WhatsApp" style="width:100%; padding:12px; margin-bottom:10px; border-radius:8px; border:1px solid #ccc;">
-        <button class="btn-zap" onclick="enviar()">FALAR COM CONSULTOR AGORA</button>
+    <div class="footer-form">
+        <h4 style="margin-top: 0; color: var(--blue);">Garantir minha Aprovação</h4>
+        <input type="text" id="nome" placeholder="Seu Nome Completo">
+        <input type="tel" id="tel" placeholder="Seu WhatsApp com DDD">
+        <button class="btn-zap" onclick="enviar()">SOLICITAR AGORA PELO WHATSAPP</button>
     </div>
 </div>
 
 <script>
-    let categoria = "Moto";
+    let catNome = "Moto";
     let taxaVNC = 0.19;
     let taxaBANCO = 0.40;
 
-    function selecionar(el, nome, tV, tB) {
+    function selectCat(el, nome, tV, tB) {
         document.querySelectorAll('.card-item').forEach(c => c.classList.remove('active'));
         el.classList.add('active');
-        categoria = nome; taxaVNC = tV; taxaBANCO = tB;
-        document.getElementById('prazo').max = (nome === 'Imóvel') ? 360 : 120;
-        calcular();
+        catNome = nome; taxaVNC = tV; taxaBANCO = tB;
+        document.getElementById('prazo').max = (nome === 'Imóvel') ? 240 : 120;
+        calc();
     }
 
-    function formatar(valor) {
-        return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    function formatar(v) {
+        return "R$ " + v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
-    function calcular() {
+    function calc() {
         let vT = parseFloat(document.getElementById('vTotal').value) || 0;
         let vE = parseFloat(document.getElementById('vEntrada').value) || 0;
         let p = parseInt(document.getElementById('prazo').value);
         
-        document.getElementById('txtPrazo').innerText = p + " meses";
+        document.getElementById('txtPrazo').innerText = p;
         let saldo = vT - vE;
 
-        // Cálculo VNC
-        let totalVNC = saldo + (vT * taxaVNC);
-        let parcelaVNC = totalVNC / p;
+        // VNC: Saldo + Taxa Administrativa fixa sobre o total
+        let pVNC = (saldo + (vT * taxaVNC)) / p;
 
-        // Cálculo Banco (Estimativa)
-        let prazoB = (categoria === 'Imóvel') ? 240 : 48;
-        let totalBANCO = saldo + (vT * taxaBANCO);
-        let parcelaBANCO = totalBANCO / prazoB;
+        // BANCO: Simulação com juros médios (Coeficiente de Financiamento)
+        let jurosB = 0.018; // 1.8% a.m. aproximado
+        let pBANCO = saldo * (jurosB / (1 - Math.pow(1 + jurosB, -p)));
 
-        document.getElementById('resVNC').innerText = formatar(parcelaVNC);
-        document.getElementById('resFinan').innerText = formatar(parcelaBANCO);
+        document.getElementById('resVNC').innerText = formatar(pVNC);
+        document.getElementById('resFinan').innerText = formatar(pBANCO);
     }
 
     function enviar() {
@@ -143,23 +168,23 @@
         let parc = document.getElementById('resVNC').innerText;
         let valor = formatar(parseFloat(document.getElementById('vTotal').value));
         
-        if(!nome || !tel) return alert("Preencha nome e telefone!");
+        if(!nome || !tel) { alert("Por favor, preencha nome e telefone."); return; }
 
-        let msg = `Olá! Me chamo ${nome}. Simulei um(a) ${categoria} de ${valor}. No Plano Empresa ficou ${document.getElementById('prazo').value}x de ${parc}.`;
+        let msg = `Olá VNC! Me chamo ${nome}. Simulei um ${catNome} no valor de ${valor}. No Plano Empresa ficou ${document.getElementById('prazo').value}x de ${parc}. Tenho interesse!`;
         
-        // Enviar para o seu banco de dados Formspree
+        // Enviar para Banco de Dados Formspree
         fetch("https://formspree.io/f/xreavgol", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ Nome: nome, Telefone: tel, Bem: categoria, Parcela: parc, Total: valor })
+            body: JSON.stringify({ Nome: nome, Telefone: tel, Bem: catNome, Parcela: parc, Total: valor, Prazo: document.getElementById('prazo').value })
         });
 
-        // Abrir WhatsApp (Coloque seu numero abaixo)
+        // Abrir WhatsApp (Coloque seu numero aqui)
         window.open(`https://wa.me/5599999999999?text=${encodeURIComponent(msg)}`);
     }
 
-    // Inicia cálculo
-    calcular();
+    // Inicia calculando
+    calc();
 </script>
 
 </body>
