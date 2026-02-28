@@ -3,202 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VNC Investimentos - Simulador Oficial</title>
+    <title>VNC Investimentos | Private Selection</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
     <style>
-        :root { --vnc-blue: #003366; --vnc-accent: #007bff; --bg: #f8fafc; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; color: #1e293b; }
-        .top-bar { background: #fff; padding: 20px; text-align: center; border-bottom: 2px solid #e2e8f0; font-weight: 800; color: var(--vnc-blue); font-size: 1.5rem; letter-spacing: 1px; }
-        
-        .container { max-width: 900px; margin: 30px auto; background: #fff; border-radius: 20px; padding: 40px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
-        
-        h2 { text-align: center; color: var(--vnc-blue); margin-bottom: 30px; font-size: 1.2rem; text-transform: uppercase; }
-
-        /* Novos Quadradinhos de Seleção */
-        .grid-bens { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; margin-bottom: 40px; }
-        .item-bem { 
-            background: #fff; border: 2px solid #f1f5f9; border-radius: 16px; padding: 20px; text-align: center; 
-            cursor: pointer; transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        :root {
+            --vnc-gold: #c5a059;
+            --vnc-dark: #0a0e14;
+            --vnc-card: #161b22;
+            --text-main: #e6edf3;
+            --accent: #238636;
         }
-        .item-bem:hover { transform: translateY(-5px); border-color: #cbd5e1; }
-        .item-bem.active { border-color: var(--vnc-accent); background: #eff6ff; box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2); }
-        .item-bem .icon { font-size: 2.5rem; margin-bottom: 10px; display: block; }
-        .item-bem .label { font-size: 0.9rem; font-weight: 700; color: #475569; }
-        .item-bem.active .label { color: var(--vnc-accent); }
 
-        /* Seção de Valores */
-        .input-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; margin-bottom: 40px; padding: 25px; background: #f1f5f9; border-radius: 16px; }
-        .field label { display: block; font-size: 0.75rem; font-weight: 800; color: #64748b; margin-bottom: 8px; text-transform: uppercase; }
-        .field input { width: 100%; padding: 15px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 1.2rem; font-weight: 700; box-sizing: border-box; color: var(--vnc-blue); }
-        .field input:focus { outline: none; border-color: var(--vnc-accent); ring: 2px solid #bfdbfe; }
-
-        /* Resultados */
-        .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .card { border: 1px solid #e2e8f0; border-radius: 16px; padding: 30px; background: #fff; position: relative; overflow: hidden; }
-        .card.vnc { border: 2px solid var(--vnc-accent); background: #fff; }
-        .card.vnc::before { content: "MELHOR OPÇÃO"; position: absolute; top: 12px; right: -30px; background: var(--vnc-accent); color: white; font-size: 0.6rem; font-weight: 900; padding: 5px 40px; transform: rotate(45deg); }
-        
-        .card h3 { margin: 0 0 15px 0; font-size: 1rem; color: #64748b; }
-        .valor-principal { font-size: 2.2rem; font-weight: 900; color: var(--vnc-blue); margin: 10px 0; }
-        .vnc .valor-principal { color: var(--vnc-accent); }
-        
-        .detalhes { margin-top: 20px; border-top: 1px solid #f1f5f9; padding-top: 20px; }
-        .detalhes div { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 10px; }
-        .detalhes b { color: #1e293b; }
-
-        .btn-whats { width: 100%; padding: 20px; background: #22c55e; color: #fff; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 800; cursor: pointer; margin-top: 30px; transition: 0.3s; box-shadow: 0 4px 14px 0 rgba(34, 197, 94, 0.39); }
-        .btn-whats:hover { background: #16a34a; transform: scale(1.02); }
-
-        .admin-link { display: block; text-align: center; margin-top: 50px; color: #cbd5e1; font-size: 0.7rem; cursor: pointer; text-decoration: none; }
-    </style>
-</head>
-<body>
-
-<div class="top-bar">VNC INVESTIMENTOS</div>
-
-<div class="container">
-    <h2>1. O que você deseja simular?</h2>
-    <div class="grid-bens">
-        <div class="item-bem active" onclick="setBem(this, 'Moto', 0.19, 0.40)">
-            <span class="icon">🏍️</span>
-            <span class="label">MOTO</span>
-        </div>
-        <div class="item-bem" onclick="setBem(this, 'Carro', 0.21, 0.40)">
-            <span class="icon">🚗</span>
-            <span class="label">CARRO</span>
-        </div>
-        <div class="item-bem" onclick="setBem(this, 'Imóvel', 0.25, 0.75)">
-            <span class="icon">🏠</span>
-            <span class="label">IMÓVEL</span>
-        </div>
-        <div class="item-bem" onclick="setBem(this, 'Maquinário', 0.25, 0.75)">
-            <span class="icon">🚜</span>
-            <span class="label">MAQUINÁRIO</span>
-        </div>
-        <div class="item-bem" onclick="setBem(this, 'Serviços', 0.22, 0.40)">
-            <span class="icon">✈️</span>
-            <span class="label">SERVIÇOS</span>
-        </div>
-    </div>
-
-    <h2>2. Simulação de Valores</h2>
-    <div class="input-box">
-        <div class="field">
-            <label>Valor do Bem</label>
-            <input type="text" id="vTotal" class="money" value="8000000">
-        </div>
-        <div class="field">
-            <label>Sua Entrada</label>
-            <input type="text" id="vEntrada" class="money" value="1000000">
-        </div>
-        <div class="field">
-            <label>Quanto deseja pagar por mês?</label>
-            <input type="text" id="vDesejado" class="money" placeholder="Ex: R$ 1.200,00">
-        </div>
-    </div>
-
-    <div class="compare-grid">
-        <div class="card">
-            <h3>Financiamento</h3>
-            <div id="resFinan" class="valor-principal">R$ 0,00</div>
-            <div class="detalhes">
-                <div><span>Prazo:</span> <b id="pFinan">48 meses</b></div>
-                <div><span>Taxa Total:</span> <b id="tFinan">40%</b></div>
-                <div><span>Burocracia:</span> <b>ALTA</b></div>
-            </div>
-        </div>
-
-        <div class="card vnc">
-            <h3>Plano Direto VNC</h3>
-            <div id="resVNC" class="valor-principal">R$ 0,00</div>
-            <div class="detalhes">
-                <div><span>Prazo Sugerido:</span> <b id="pVNC">48x</b></div>
-                <div><span>Aprovação:</span> <b>IMEDIATA</b></div>
-                <div><span>Sem Consulta:</span> <b>SPC/SERASA</b></div>
-            </div>
-            <input type="range" id="prazoSlider" min="12" max="120" value="48" style="width:100%; margin-top:15px; cursor:pointer;" oninput="calcular()">
-        </div>
-    </div>
-
-    <div style="margin-top:40px; padding:30px; background:#f8fafc; border-radius:16px;">
-        <div class="input-box" style="background:none; padding:0; margin-bottom:0;">
-            <div class="field"><label>Seu Nome</label><input type="text" id="nome" placeholder="Digite seu nome"></div>
-            <div class="field"><label>Seu WhatsApp</label><input type="tel" id="tel" placeholder="(00) 00000-0000"></div>
-        </div>
-        <button class="btn-whats" onclick="enviar()">Agendar Visita e Garantir Aprovação</button>
-    </div>
-
-    <a class="admin-link" onclick="$('#adminArea').toggle()">Painel de Controle</a>
-    <div id="adminArea" style="display:none; background:#1e293b; color:white; padding:20px; border-radius:12px; margin-top:10px;">
-        <ul id="leadList"></ul>
-    </div>
-</div>
-
-<script>
-    $(function() {
-        $('.money').maskMoney({prefix:'R$ ', thousands:'.', decimal:',', affixesStay: true});
-        
-        // Listener para atualizar sempre que mudar valor
-        $('.money').on('keyup', function() {
-            if(this.id === 'vDesejado') calcularInverso();
-            else calcular();
-        });
-    });
-
-    let bem = "Moto"; let txE = 0.19; let txF = 0.40;
-
-    function getVal(id) { return $("#"+id).maskMoney('unmasked')[0] || 0; }
-
-    function setBem(el, n, e, f) {
-        $(".item-bem").removeClass("active"); $(el).addClass("active");
-        bem = n; txE = e; txF = f;
-        let s = document.getElementById('prazoSlider');
-        s.max = (n === 'Imóvel' || n === 'Maquinário') ? 500 : 120;
-        calcular();
-    }
-
-    function calcularInverso() {
-        let vD = getVal('vDesejado');
-        if(vD > 200) {
-            let totalVNC = (getVal('vTotal') - getVal('vEntrada')) + (getVal('vTotal') * txE);
-            let pSug = Math.round(totalVNC / vD);
-            let sMax = parseInt(document.getElementById('prazoSlider').max);
-            if(pSug > sMax) pSug = sMax; if(pSug < 12) pSug = 12;
-            document.getElementById('prazoSlider').value = pSug;
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--vnc-dark);
+            color: var(--text-main);
+            margin: 0;
+            line-height: 1.6;
         }
-        calcular();
-    }
 
-    function calcular() {
-        let vT = getVal('vTotal'), vE = getVal('vEntrada'), pE = parseInt(document.getElementById('prazoSlider').value);
-        let sal = vT - vE;
+        .navbar {
+            padding: 20px;
+            text-align: center;
+            background: rgba(10, 14, 20, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #30363d;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-        let pF = (bem === 'Imóvel' || bem === 'Maquinário') ? 350 : 48;
-        let vF = ((sal + (vT * txF)) / pF) * 1.023;
-        $("#resFinan").text(vF.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}));
-        $("#pFinan").text(pF + " meses"); $("#tFinan").text((txF*100)+"%");
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            letter-spacing: 4px;
+            color: var(--vnc-gold);
+            font-weight: 300;
+        }
 
-        let vV = (sal + (vT * txE)) / pE;
-        $("#resVNC").text(vV.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}));
-        $("#pVNC").text(pE + "x");
-    }
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+        }
 
-    function enviar() {
-        let n = $("#nome").val(), t = $("#tel").val();
-        if(!n || !t) return alert("Por favor, preencha seu nome e zap!");
-        
-        let msg = `Olá VNC! Me chamo ${n}. Simulei um(a) ${bem} de R$ ${getVal('vTotal').toLocaleString('pt-BR')}. No Plano Empresa ficou ${$("#pVNC").text()} de ${$("#resVNC").text()}. Quero agendar!`;
-        
-        let leads = JSON.parse(localStorage.getItem('vnc_leads') || "[]");
-        leads.push(`${new Date().toLocaleString()} - ${n} (${t}) -> ${bem}`);
-        localStorage.setItem('vnc_leads', JSON.stringify(leads));
+        .selection-title {
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 300;
+            color: #8b949e;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
 
-        window.open(`https://wa.me/5599999999999?text=${encodeURIComponent(msg)}`);
-    }
+        .grid-bens {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 50px;
+        }
 
-    setTimeout(calcular, 500);
-</script>
+        .card-bem {
+            background: var(--vnc-card);
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 25px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
 
-</body>
-</html>
+        .card-bem:hover {
+            border-color: var(--vnc-gold);
+            background: #1c2128;
+        }
+
+        .card-bem.active {
+            border-color: var(--vnc-gold);
+            background: rgba(197, 160, 89, 0.1);
+            box-shadow: 0 0 15px rgba(197, 160, 89, 0.1);
+        }
+
+        .card-bem .icon {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .card-bem label {
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #8b949e;
+            cursor: pointer;
+        }
