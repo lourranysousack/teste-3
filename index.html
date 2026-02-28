@@ -1,1 +1,258 @@
-<!DOCTYPE html> <html lang="pt-br"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>VNC Investimentos - Simulador de Crédito</title> <style> :root { --vnc-blue: #1A2B4C; --vnc-accent: #007bff; --white: #ffffff; } body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; } .container { max-width: 950px; margin: auto; background: var(--white); padding: 35px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); } .header { text-align: center; margin-bottom: 35px; border-bottom: 3px solid var(--vnc-blue); padding-bottom: 15px; } .header h1 { color: var(--vnc-blue); margin: 0; font-size: 2.2rem; } .input-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; margin-bottom: 40px; background: #f8f9fa; padding: 25px; border-radius: 12px; } label { display: block; margin-bottom: 10px; font-weight: bold; color: var(--vnc-blue); } input, select { width: 100%; padding: 14px; border: 2px solid #ddd; border-radius: 8px; font-size: 18px; box-sizing: border-box; } .simulacoes { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; } .card { padding: 30px; border-radius: 12px; border: 2px solid #e9ecef; text-align: center; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.02); } .card.destaque { border-color: var(--vnc-accent); background: #f0f7ff; } .card h2 { margin: 0 0 20px 0; font-size: 1.3rem; color: var(--vnc-blue); } .valor-parcela { font-size: 2.4rem; font-weight: 900; color: var(--vnc-accent); margin: 15px 0; display: block; letter-spacing: -1px; } .info-detalhe { font-size: 15px; color: #555; line-height: 1.6; text-align: left; background: rgba(255,255,255,0.6); padding: 15px; border-radius: 8px; } .aviso { color: #d9534f; font-size: 13px; font-weight: bold; margin-top: 10px; min-height: 18px; } .form-contato { margin-top: 40px; padding: 30px; background: #f8f9fa; border-radius: 12px; } button { width: 100%; padding: 20px; background: #28a745; color: white; border: none; border-radius: 8px; font-size: 20px; cursor: pointer; font-weight: bold; margin-top: 20px; box-shadow: 0 4px 0 #218838; } button:hover { background: #218838; transform: translateY(-2px); } .obs { font-size: 12px; color: #777; text-align: center; margin-top: 25px; line-height: 1.5; padding: 0 20px; } @media (max-width: 768px) { .simulacoes { grid-template-columns: 1fr; } } </style> </head> <body> <div class="container"> <div class="header"> <h1>VNC INVESTIMENTOS</h1> </div> <div class="input-section"> <div> <label>O que deseja simular?</label> <select id="tipoBem" onchange="calcular()"> <option value="Carro">Carro</option> <option value="Moto">Moto</option> <option value="Casa">Casa / Imóvel</option> <option value="Fazenda">Fazenda</option> <option value="Maquinário">Maquinário Agrícola</option> </select> </div> <div> <label>Valor do Bem (R$)</label> <input type="number" id="vTotal" value="60000" oninput="calcular()"> </div> <div> <label>Sua Entrada (R$)</label> <input type="number" id="vEntrada" value="10000" oninput="calcular()"> </div> </div> <div class="simulacoes"> <!-- PLANO FINANCIAMENTO --> <div class="card"> <h2>Financiamento Tradicional</h2> <span id="txtFinan" class="valor-parcela">R$ 0,00</span> <div class="info-detalhe"> • <b>Prazo: 48 meses (Fixo)</b><br> • Juros: 40% sobre o valor do bem<br> • Taxa adicional: 2.3% sobre a parcela<br> • Requisito: Score 650+ / Nome Limpo </div> <div id="warnFinan" class="aviso"></div> </div> <!-- PLANO EMPRESA --> <div class="card destaque"> <h2>Plano Direto (VNC)</h2> <span id="txtEmp" class="valor-parcela">R$ 0,00</span> <div class="info-detalhe"> • <b>Prazo: <span id="numPrazo">48</span>x (Ajustável)</b><br> • Juros: 19% a 25% conforme o valor<br> • <b>Sem consulta de Score / Sem CNH</b><br> • Aprova Negativados e Autônomos </div> <input type="range" id="prazoSlider" min="1" max="80" value="48" style="width:100%; margin-top:20px;" oninput="calcular()"> <div id="warnEmp" class="aviso"></div> </div> </div> <div class="form-contato"> <label>Seu Nome Completo</label> <input type="text" id="nome" placeholder="Ex: João Silva"> <label style="margin-top:20px;">Seu WhatsApp</label> <input type="text" id="tel" placeholder="(00) 00000-0000"> <button onclick="enviar()">Falar com Especialista e Agendar Horário</button> </div> <p class="obs"> <b>OBSERVAÇÃO:</b> Este cálculo é uma simulação matemática instantânea. A aprovação real e as taxas finais dependem de análise detalhada. Entre em contato para validar sua aprovação e agendar uma visita. </p> </div> <script> function calcular() { const vTotal = parseFloat(document.getElementById('vTotal').value) || 0; const vEntrada = parseFloat(document.getElementById('vEntrada').value) || 0; const prazo = parseInt(document.getElementById('prazoSlider').value); const tipo = document.getElementById('tipoBem').value; document.getElementById('numPrazo').innerText = prazo; const saldo = vTotal - vEntrada; // --- CÁLCULO FINANCIAMENTO --- const jurosFinan = vTotal * 0.40; const parcelaFinan = ((saldo + jurosFinan) / 48) * 1.023; document.getElementById('txtFinan').innerText = (parcelaFinan > 0) ? `48x R$ ${parcelaFinan.toFixed(2)}` : "R$ 0,00"; document.getElementById('warnFinan').innerText = (parcelaFinan < 800 && parcelaFinan > 0) ? "Mínimo exigido: R$ 800/mês" : ""; // --- CÁLCULO PLANO EMPRESA --- let jurosTaxa = (vTotal > 100000) ? 0.25 : 0.19; const totalEmp = saldo + (vTotal * jurosTaxa); const parcelaEmp = totalEmp / prazo; document.getElementById('txtEmp').innerText = (parcelaEmp > 0) ? `${prazo}x R$ ${parcelaEmp.toFixed(2)}` : "R$ 0,00"; // Avisos Plano Empresa if (vEntrada < 4500 && vEntrada > 0) { document.getElementById('warnEmp').innerText = "Entrada mínima sugerida: R$ 4.500"; } else if (parcelaEmp < 450 && parcelaEmp > 0) { document.getElementById('warnEmp').innerText = "Parcela mínima: R$ 450"; } else { document.getElementById('warnEmp').innerText = ""; } } function enviar() { const nome = document.getElementById('nome').value; const tel = document.getElementById('tel').value; const bem = document.getElementById('tipoBem').value; const valEmp = document.getElementById('txtEmp').innerText; if(!nome || !tel) { alert("Por favor, preencha seu nome e WhatsApp."); return; } const msg = `Olá VNC! Me chamo ${nome}. Simulei um(a) ${bem} de R$${document.getElementById('vTotal').value}. No Plano Empresa ficou ${valEmp}. Gostaria de agendar um horário!`; // SUBSTITUA ABAIXO PELO SEU NÚMERO (Ex: 5511999999999) window.open(`https://wa.me/5599999999999?text=${encodeURIComponent(msg)}`); } // Inicia o cálculo ao abrir a página calcular(); </script> </body> </html>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VNC Investimentos - Simulador de Crédito</title>
+    <style>
+        :root {
+            --vnc-blue: #1A2B4C;
+            --vnc-accent: #007bff;
+            --white: #ffffff;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 950px;
+            margin: auto;
+            background: var(--white);
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+            border-bottom: 3px solid var(--vnc-blue);
+            padding-bottom: 15px;
+        }
+        .header h1 {
+            color: var(--vnc-blue);
+            margin: 0;
+            font-size: 2.2rem;
+        }
+        .input-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: var(--vnc-blue);
+        }
+        input, select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 18px;
+            box-sizing: border-box;
+        }
+        .simulacoes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        .card {
+            padding: 30px;
+            border-radius: 12px;
+            border: 2px solid #e9ecef;
+            text-align: center;
+            background: #fff;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+        .card.destaque {
+            border-color: var(--vnc-accent);
+            background: #f0f7ff;
+        }
+        .card h2 {
+            margin: 0 0 20px 0;
+            font-size: 1.3rem;
+            color: var(--vnc-blue);
+        }
+        .valor-parcela {
+            font-size: 2.4rem;
+            font-weight: 900;
+            color: var(--vnc-accent);
+            margin: 15px 0;
+            display: block;
+            letter-spacing: -1px;
+        }
+        .info-detalhe {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.6;
+            text-align: left;
+            background: rgba(255,255,255,0.6);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .aviso {
+            color: #d9534f;
+            font-size: 13px;
+            font-weight: bold;
+            margin-top: 10px;
+            min-height: 18px;
+        }
+        .form-contato {
+            margin-top: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+        button {
+            width: 100%;
+            padding: 20px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+            box-shadow: 0 4px 0 #218838;
+        }
+        button:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        .obs {
+            font-size: 12px;
+            color: #777;
+            text-align: center;
+            margin-top: 25px;
+            line-height: 1.5;
+            padding: 0 20px;
+        }
+        @media (max-width: 768px) {
+            .simulacoes { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>VNC INVESTIMENTOS</h1>
+    </div>
+
+    <div class="input-section">
+        <div>
+            <label>O que deseja simular?</label>
+            <select id="tipoBem" onchange="calcular()">
+                <option value="Carro">Carro</option>
+                <option value="Moto">Moto</option>
+                <option value="Casa">Casa / Imóvel</option>
+                <option value="Fazenda">Fazenda</option>
+                <option value="Maquinário">Maquinário Agrícola</option>
+            </select>
+        </div>
+        <div>
+            <label>Valor do Bem (R$)</label>
+            <input type="number" id="vTotal" value="60000" oninput="calcular()">
+        </div>
+        <div>
+            <label>Sua Entrada (R$)</label>
+            <input type="number" id="vEntrada" value="10000" oninput="calcular()">
+        </div>
+    </div>
+
+    <div class="simulacoes">
+        <div class="card">
+            <h2>Financiamento Tradicional</h2>
+            <span id="txtFinan" class="valor-parcela">R$ 0,00</span>
+            <div class="info-detalhe">
+                • <b>Prazo: 48 meses (Fixo)</b><br>
+                • Juros: 40% sobre o valor do bem<br>
+                • Taxa adicional: 2.3% sobre a parcela<br>
+                • Requisito: Score 650+ / Nome Limpo
+            </div>
+            <div id="warnFinan" class="aviso"></div>
+        </div>
+
+        <div class="card destaque">
+            <h2>Plano Direto (VNC)</h2>
+            <span id="txtEmp" class="valor-parcela">R$ 0,00</span>
+            <div class="info-detalhe">
+                • <b>Prazo: <span id="numPrazo">48</span>x (Ajustável)</b><br>
+                • Juros: 19% a 25% conforme o valor<br>
+                • <b>Sem consulta de Score / Sem CNH</b><br>
+                • Aprova Negativados e Autônomos
+            </div>
+            <input type="range" id="prazoSlider" min="12" max="120" value="48" style="width:100%; margin-top:20px;" oninput="calcular()">
+            <div id="warnEmp" class="aviso"></div>
+        </div>
+    </div>
+
+    <div class="form-contato">
+        <label>Seu Nome Completo</label>
+        <input type="text" id="nome" placeholder="Ex: João Silva">
+        <label style="margin-top:20px;">Seu WhatsApp</label>
+        <input type="text" id="tel" placeholder="(00) 00000-0000">
+        <button onclick="enviar()">Falar com Especialista e Agendar Horário</button>
+    </div>
+
+    <p class="obs">
+        <b>OBSERVAÇÃO:</b> Este cálculo é uma simulação matemática instantânea. A aprovação real e as taxas finais dependem de análise detalhada. Entre em contato para validar sua aprovação e agendar uma visita.
+    </p>
+</div>
+
+<script>
+    function calcular() {
+        const vTotal = parseFloat(document.getElementById('vTotal').value) || 0;
+        const vEntrada = parseFloat(document.getElementById('vEntrada').value) || 0;
+        const prazo = parseInt(document.getElementById('prazoSlider').value);
+        
+        document.getElementById('numPrazo').innerText = prazo;
+        const saldo = vTotal - vEntrada;
+
+        // --- CÁLCULO FINANCIAMENTO (40% fixo no exemplo) ---
+        const jurosFinan = vTotal * 0.40;
+        const parcelaFinan = ((saldo + jurosFinan) / 48) * 1.023;
+        
+        document.getElementById('txtFinan').innerText = (parcelaFinan > 0) ? `48x R$ ${parcelaFinan.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : "R$ 0,00";
+
+        // --- CÁLCULO PLANO EMPRESA (VNC) ---
+        let jurosTaxa = (vTotal > 100000) ? 0.25 : 0.19;
+        const totalEmp = saldo + (vTotal * jurosTaxa);
+        const parcelaEmp = totalEmp / prazo;
+
+        document.getElementById('txtEmp').innerText = (parcelaEmp > 0) ? `${prazo}x R$ ${parcelaEmp.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : "R$ 0,00";
+
+        // Alertas
+        document.getElementById('warnEmp').innerText = (vEntrada < 4500 && vEntrada > 0) ? "Entrada mínima sugerida: R$ 4.500" : "";
+    }
+
+    function enviar() {
+        const nome = document.getElementById('nome').value;
+        const tel = document.getElementById('tel').value;
+        const bem = document.getElementById('tipoBem').value;
+        const vTotal = document.getElementById('vTotal').value;
+        const valEmp = document.getElementById('txtEmp').innerText;
+
+        if(!nome || !tel) {
+            alert("Por favor, preencha seu nome e WhatsApp.");
+            return;
+        }
+
+        const msg = `Olá VNC! Me chamo ${nome}. Simulei um(a) ${bem} de R$${vTotal}. No Plano Empresa ficou ${valEmp}. Gostaria de agendar um horário!`;
+        window.open(`https://wa.me/5599999999999?text=${encodeURIComponent(msg)}`);
+    }
+
+    // Inicia o cálculo automático
+    calcular();
+</script>
+
+</body>
+</html>
