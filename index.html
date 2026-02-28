@@ -3,143 +3,333 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VNC Investimentos | Simulador Oficial</title>
+    <title>VNC Investimentos | Simulador Estilo BV</title>
     <style>
-        :root { --blue: #004a99; --light: #f4f7f6; --gray: #666; --green: #25d366; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--light); margin: 0; color: #333; }
-        
-        .header { background: var(--blue); color: white; padding: 20px; text-align: center; font-size: 1.5rem; font-weight: bold; letter-spacing: 2px; }
-        .container { max-width: 900px; margin: 20px auto; padding: 15px; }
-
-        /* Grid de Imagens Reais */
-        .grid-bens { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 30px; }
-        .card-item { 
-            height: 110px; border-radius: 10px; cursor: pointer; border: 3px solid white;
-            display: flex; align-items: flex-end; justify-content: center;
-            background-size: cover; background-position: center; transition: 0.3s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: relative;
+        /* Estilo Inspirado no BV */
+        :root {
+            --bv-blue: #002e5d;
+            --bv-light-blue: #0067b1;
+            --bg-gray: #f4f7fa;
+            --text-gray: #4a4a4a;
+            --success: #28a745;
+            --danger: #dc3545;
         }
-        .card-item span { 
-            background: rgba(0, 74, 153, 0.8); color: white; width: 100%; 
-            text-align: center; font-size: 0.7rem; font-weight: bold; padding: 5px 0; border-radius: 0 0 7px 7px;
+
+        body {
+            font-family: 'Open Sans', Arial, sans-serif;
+            background-color: var(--bg-gray);
+            color: var(--text-gray);
+            margin: 0;
+            padding: 0;
         }
-        .card-item.active { border-color: var(--blue); transform: scale(1.05); }
 
-        /* Fotos das Categorias */
-        .btn-moto { background-image: url('https://images.unsplash.com/photo-1558981403-c5f91cbba527?w=300'); }
-        .btn-carro { background-image: url('https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=300'); }
-        .btn-casa { background-image: url('https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=300'); }
-        .btn-maquina { background-image: url('https://images.unsplash.com/photo-1533991505870-b5c4683a3070?w=300'); }
-        .btn-servico { background-image: url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=300'); }
+        .navbar {
+            background-color: white;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 3px solid var(--bv-blue);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
 
-        /* Entradas de Valores */
-        .input-box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
-        .field { margin-bottom: 15px; }
-        .field label { display: block; font-size: 0.8rem; font-weight: bold; color: var(--blue); margin-bottom: 5px; }
-        .field input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 1.1rem; box-sizing: border-box; }
+        .navbar h1 {
+            color: var(--bv-blue);
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 15px;
+        }
+
+        /* Seleção de Bens (Estilo App) */
+        .selection-title {
+            font-weight: 700;
+            color: var(--bv-blue);
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .grid-bens {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .card-bem {
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            overflow: hidden;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+        }
+
+        .card-bem img {
+            width: 100%;
+            height: 70px;
+            object-fit: cover;
+        }
+
+        .card-bem span {
+            display: block;
+            padding: 8px 0;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--bv-blue);
+        }
+
+        .card-bem.active {
+            border: 2px solid var(--bv-light-blue);
+            box-shadow: 0 4px 10px rgba(0,103,177,0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Formulário de Valores */
+        .card-input {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--bv-blue);
+            margin-bottom: 8px;
+        }
+
+        /* Campo com Cifrão Fixo */
+        .currency-input {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .currency-input::before {
+            content: "R$";
+            position: absolute;
+            left: 15px;
+            font-weight: 700;
+            color: var(--bv-blue);
+            font-size: 1.1rem;
+        }
+
+        .currency-input input {
+            width: 100%;
+            padding: 12px 12px 12px 45px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--bv-blue);
+        }
 
         /* Resultados Lado a Lado */
-        .results { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .res-card { background: white; padding: 20px; border-radius: 12px; border: 1px solid #ddd; position: relative; }
-        .res-card.vnc { border: 2px solid var(--blue); background: #f0f7ff; }
-        
-        .res-card h3 { margin: 0 0 10px 0; font-size: 0.9rem; color: var(--gray); text-transform: uppercase; }
-        .price { font-size: 1.6rem; font-weight: 800; color: #d9534f; margin: 10px 0; }
-        .vnc .price { color: var(--blue); }
+        .comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
 
-        .info-list { font-size: 0.75rem; color: #555; padding: 0; list-style: none; }
-        .info-list li { margin-bottom: 8px; padding-left: 15px; position: relative; }
-        .info-list li::before { content: "•"; position: absolute; left: 0; color: var(--blue); font-weight: bold; }
+        .res-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #eee;
+        }
 
-        /* Controle de Parcela/Prazo */
-        .slider-box { margin-top: 15px; text-align: center; }
-        input[type=range] { width: 100%; accent-color: var(--blue); cursor: pointer; }
+        .res-box.vnc {
+            border: 2px solid var(--bv-blue);
+            background: #fdfdfd;
+        }
 
-        /* Form contato */
-        .footer-form { background: #fff; padding: 25px; border-radius: 12px; margin-top: 25px; border: 1px solid #ddd; text-align: center; }
-        .footer-form input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box; }
-        .btn-zap { background: var(--green); color: white; border: none; padding: 18px; width: 100%; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-zap:hover { background: #1eb954; transform: scale(1.02); }
+        .res-box h3 {
+            margin-top: 0;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--gray);
+        }
 
-        @media (max-width: 600px) { .results { grid-template-columns: 1fr; } }
+        .price-display {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--danger);
+            margin: 10px 0;
+        }
+
+        .vnc .price-display {
+            color: var(--success);
+        }
+
+        .info-list {
+            padding: 0;
+            list-style: none;
+            font-size: 0.8rem;
+        }
+
+        .info-list li {
+            padding: 6px 0;
+            border-bottom: 1px solid #f4f4f4;
+            display: flex;
+            align-items: center;
+        }
+
+        .info-list li::before {
+            margin-right: 8px;
+            font-weight: bold;
+        }
+
+        .bad::before { content: "✕"; color: var(--danger); }
+        .good::before { content: "✓"; color: var(--success); }
+
+        /* Rodapé de Contato */
+        .form-footer {
+            background: var(--bv-blue);
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .form-footer input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 6px;
+            border: none;
+            box-sizing: border-box;
+        }
+
+        .btn-zap {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 18px;
+            width: 100%;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) { .comparison { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-<div class="header">VNC INVESTIMENTOS</div>
+<div class="navbar">
+    <h1>VNC Investimentos</h1>
+</div>
 
 <div class="container">
+    <div class="selection-title">O que você deseja conquistar hoje?</div>
     <div class="grid-bens">
-        <div class="card-item btn-moto active" onclick="selectCat(this, 'Moto', 0.19, 0.40)"><span>MOTOS</span></div>
-        <div class="card-item btn-carro" onclick="selectCat(this, 'Carro', 0.21, 0.40)"><span>CARROS</span></div>
-        <div class="card-item btn-casa" onclick="selectCat(this, 'Imóvel', 0.25, 0.75)"><span>IMÓVEIS</span></div>
-        <div class="card-item btn-maquina" onclick="selectCat(this, 'Maquinário', 0.25, 0.75)"><span>MÁQUINAS</span></div>
-        <div class="card-item btn-servico" onclick="selectCat(this, 'Serviços', 0.20, 0.35)"><span>SERVIÇOS</span></div>
+        <div class="card-bem active" onclick="setCat(this, 'Moto', 0.19)">
+            <img src="https://images.pexels.com/photos/104842/bmw-vehicle-ride-bike-104842.jpeg?auto=compress&w=200" alt="Moto">
+            <span>MOTOS</span>
+        </div>
+        <div class="card-bem" onclick="setCat(this, 'Carro', 0.21)">
+            <img src="https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?auto=compress&w=200" alt="Carro">
+            <span>CARROS</span>
+        </div>
+        <div class="card-bem" onclick="setCat(this, 'Imóvel', 0.25)">
+            <img src="https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&w=200" alt="Casa">
+            <span>IMÓVEIS</span>
+        </div>
+        <div class="card-bem" onclick="setCat(this, 'Maquinário', 0.25)">
+            <img src="https://images.pexels.com/photos/259209/pexels-photo-259209.jpeg?auto=compress&w=200" alt="Máquina">
+            <span>MÁQUINAS</span>
+        </div>
+        <div class="card-bem" onclick="setCat(this, 'Serviços', 0.20)">
+            <img src="https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&w=200" alt="Serviço">
+            <span>SERVIÇOS</span>
+        </div>
     </div>
 
-    <div class="input-box">
-        <div class="field">
-            <label>VALOR DO BEM (R$)</label>
-            <input type="number" id="vTotal" value="50000" oninput="calc()">
+    <div class="card-input">
+        <div class="input-group">
+            <label>VALOR TOTAL DO BEM</label>
+            <div class="currency-input">
+                <input type="number" id="vTotal" value="50000" oninput="calc()">
+            </div>
         </div>
-        <div class="field">
-            <label>ENTRADA DISPONÍVEL (R$)</label>
-            <input type="number" id="vEntrada" value="5000" oninput="calc()">
+
+        <div class="input-group">
+            <label>VALOR DA ENTRADA</label>
+            <div class="currency-input">
+                <input type="number" id="vEntrada" value="5000" oninput="calc()">
+            </div>
         </div>
-        <div class="slider-box">
-            <label style="font-size: 0.8rem; font-weight: bold; color: var(--blue);">ESCOLHA O PRAZO: <span id="txtPrazo">48</span> MESES</label>
-            <input type="range" id="prazo" min="12" max="120" value="48" oninput="calc()">
+
+        <div class="input-group">
+            <label>PRAZO: <span id="txtPrazo" style="color:var(--bv-light-blue)">48</span> MESES</label>
+            <input type="range" id="prazo" min="12" max="120" value="48" style="width: 100%; accent-color: var(--bv-blue);" oninput="calc()">
         </div>
     </div>
 
-    <div class="results">
-        <div class="res-card">
-            <h3>Financiamento</h3>
-            <div class="price" id="resFinan">R$ 0,00</div>
+    <div class="comparison">
+        <div class="res-box">
+            <h3>Financiamento Bancário</h3>
+            <div class="price-display" id="resFinan">R$ 0,00</div>
             <ul class="info-list">
-                <li>Juros de até 1.99% a.m.</li>
-                <li>Exige Nome Limpo</li>
-                <li>Exige Score Alto</li>
-                <li>Exige CNH</li>
-                <li>Alienação Bancária</li>
+                <li class="bad">Veículos: Apenas ano 2016 em diante</li>
+                <li class="bad">Exige Nome Limpo e Score Alto</li>
+                <li class="bad">Exige CNH do Condutor</li>
+                <li class="bad">Taxas de juros abusivas</li>
             </ul>
         </div>
 
-        <div class="res-card vnc">
+        <div class="res-box vnc">
             <h3>Plano Empresa VNC</h3>
-            <div class="price" id="resVNC">R$ 0,00</div>
+            <div class="price-display" id="resVNC">R$ 0,00</div>
             <ul class="info-list">
-                <li><b>Aprovação Facilitada</b></li>
-                <li><b>Sem Consulta de Score</b></li>
-                <li>Aceitamos Score Baixo</li>
-                <li><b>Não Exige CNH</b></li>
-                <li>Taxa Administrativa Reduzida</li>
+                <li class="good"><b>Qualquer ano de fabricação</b></li>
+                <li class="good"><b>Aprovação com Score Baixo</b></li>
+                <li class="good"><b>Sem necessidade de CNH</b></li>
+                <li class="good"><b>Sem consulta SPC rigorosa</b></li>
             </ul>
         </div>
     </div>
 
-    <div class="footer-form">
-        <h4 style="margin-top: 0; color: var(--blue);">Garantir minha Aprovação</h4>
-        <input type="text" id="nome" placeholder="Seu Nome Completo">
-        <input type="tel" id="tel" placeholder="Seu WhatsApp com DDD">
-        <button class="btn-zap" onclick="enviar()">SOLICITAR AGORA PELO WHATSAPP</button>
+    <div class="form-footer">
+        <h3 style="margin-top:0">Fale com um Especialista BV/VNC</h3>
+        <p style="font-size:0.8rem; margin-bottom:20px;">Garantimos a melhor taxa do mercado para o seu perfil.</p>
+        <input type="text" id="nome" placeholder="Nome Completo">
+        <input type="tel" id="tel" placeholder="Seu WhatsApp">
+        <button class="btn-zap" onclick="enviar()">SOLICITAR APROVAÇÃO</button>
     </div>
 </div>
 
 <script>
     let catNome = "Moto";
     let taxaVNC = 0.19;
-    let taxaBANCO = 0.40;
 
-    function selectCat(el, nome, tV, tB) {
-        document.querySelectorAll('.card-item').forEach(c => c.classList.remove('active'));
+    function setCat(el, nome, taxa) {
+        document.querySelectorAll('.card-bem').forEach(c => c.classList.remove('active'));
         el.classList.add('active');
-        catNome = nome; taxaVNC = tV; taxaBANCO = tB;
-        document.getElementById('prazo').max = (nome === 'Imóvel') ? 240 : 120;
+        catNome = nome;
+        taxaVNC = taxa;
+        document.getElementById('prazo').max = (nome === 'Imóvel' || nome === 'Maquinário') ? 240 : 120;
         calc();
     }
 
-    function formatar(v) {
+    function formatarReal(v) {
         return "R$ " + v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
@@ -151,39 +341,39 @@
         document.getElementById('txtPrazo').innerText = p;
         let saldo = vT - vE;
 
-        // VNC: Saldo + Taxa Administrativa fixa sobre o total
+        // VNC: (Saldo + Taxa Admin fixa) / Prazo
         let pVNC = (saldo + (vT * taxaVNC)) / p;
 
-        // BANCO: Simulação com juros médios (Coeficiente de Financiamento)
-        let jurosB = 0.018; // 1.8% a.m. aproximado
-        let pBANCO = saldo * (jurosB / (1 - Math.pow(1 + jurosB, -p)));
+        // Banco: Simulação de Juros Compostos (1.95% a.m.)
+        let j = 0.0195;
+        let pB = saldo * (j / (1 - Math.pow(1 + j, -p)));
 
-        document.getElementById('resVNC').innerText = formatar(pVNC);
-        document.getElementById('resFinan').innerText = formatar(pBANCO);
+        document.getElementById('resVNC').innerText = formatarReal(pVNC);
+        document.getElementById('resFinan').innerText = formatarReal(pB);
     }
 
     function enviar() {
-        let nome = document.getElementById('nome').value;
-        let tel = document.getElementById('tel').value;
+        let n = document.getElementById('nome').value;
+        let t = document.getElementById('tel').value;
         let parc = document.getElementById('resVNC').innerText;
-        let valor = formatar(parseFloat(document.getElementById('vTotal').value));
+        let total = formatarReal(parseFloat(document.getElementById('vTotal').value));
         
-        if(!nome || !tel) { alert("Por favor, preencha nome e telefone."); return; }
+        if(!n || !t) return alert("Por favor, preencha nome e zap.");
 
-        let msg = `Olá VNC! Me chamo ${nome}. Simulei um ${catNome} no valor de ${valor}. No Plano Empresa ficou ${document.getElementById('prazo').value}x de ${parc}. Tenho interesse!`;
+        let msg = `Olá! Me chamo ${n}. Simulei um ${catNome} de ${total}. Pelo Plano VNC ficou ${document.getElementById('prazo').value}x de ${parc}. Quero saber como aprovar!`;
         
-        // Enviar para Banco de Dados Formspree
+        // Enviar para o seu banco de dados (Formspree)
         fetch("https://formspree.io/f/xreavgol", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ Nome: nome, Telefone: tel, Bem: catNome, Parcela: parc, Total: valor, Prazo: document.getElementById('prazo').value })
+            body: JSON.stringify({ Nome: n, Zap: t, Bem: catNome, Parcela: parc, Valor: total })
         });
 
         // Abrir WhatsApp (Coloque seu numero aqui)
         window.open(`https://wa.me/5599999999999?text=${encodeURIComponent(msg)}`);
     }
 
-    // Inicia calculando
+    // Calcular no início
     calc();
 </script>
 
