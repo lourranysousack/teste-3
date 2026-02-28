@@ -3,210 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VNC Investimentos - Simulador Premium</title>
+    <title>VNC Investimentos - Simulador Oficial</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
     <style>
-        :root {
-            --vnc-blue: #003366;
-            --vnc-accent: #007bff;
-            --bg-gray: #f4f7f9;
-            --white: #ffffff;
-            --text-dark: #333;
+        :root { --vnc-blue: #003366; --vnc-accent: #007bff; --bg: #f8fafc; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; color: #1e293b; }
+        .top-bar { background: #fff; padding: 20px; text-align: center; border-bottom: 2px solid #e2e8f0; font-weight: 800; color: var(--vnc-blue); font-size: 1.5rem; letter-spacing: 1px; }
+        
+        .container { max-width: 900px; margin: 30px auto; background: #fff; border-radius: 20px; padding: 40px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+        
+        h2 { text-align: center; color: var(--vnc-blue); margin-bottom: 30px; font-size: 1.2rem; text-transform: uppercase; }
+
+        /* Novos Quadradinhos de Seleção */
+        .grid-bens { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; margin-bottom: 40px; }
+        .item-bem { 
+            background: #fff; border: 2px solid #f1f5f9; border-radius: 16px; padding: 20px; text-align: center; 
+            cursor: pointer; transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg-gray); margin: 0; color: var(--text-dark); }
-        .top-bar { background: var(--white); padding: 15px 0; text-align: center; border-bottom: 1px solid #ddd; font-weight: bold; color: var(--vnc-blue); }
-        .hero { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80'); background-size: cover; color: white; text-align: center; padding: 60px 20px; }
-        .hero h1 { font-size: 2.5rem; margin: 0; }
-        .container { max-width: 1000px; margin: -50px auto 50px; background: var(--white); border-radius: 12px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .item-bem:hover { transform: translateY(-5px); border-color: #cbd5e1; }
+        .item-bem.active { border-color: var(--vnc-accent); background: #eff6ff; box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2); }
+        .item-bem .icon { font-size: 2.5rem; margin-bottom: 10px; display: block; }
+        .item-bem .label { font-size: 0.9rem; font-weight: 700; color: #475569; }
+        .item-bem.active .label { color: var(--vnc-accent); }
+
+        /* Seção de Valores */
+        .input-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; margin-bottom: 40px; padding: 25px; background: #f1f5f9; border-radius: 16px; }
+        .field label { display: block; font-size: 0.75rem; font-weight: 800; color: #64748b; margin-bottom: 8px; text-transform: uppercase; }
+        .field input { width: 100%; padding: 15px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 1.2rem; font-weight: 700; box-sizing: border-box; color: var(--vnc-blue); }
+        .field input:focus { outline: none; border-color: var(--vnc-accent); ring: 2px solid #bfdbfe; }
+
+        /* Resultados */
+        .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .card { border: 1px solid #e2e8f0; border-radius: 16px; padding: 30px; background: #fff; position: relative; overflow: hidden; }
+        .card.vnc { border: 2px solid var(--vnc-accent); background: #fff; }
+        .card.vnc::before { content: "MELHOR OPÇÃO"; position: absolute; top: 12px; right: -30px; background: var(--vnc-accent); color: white; font-size: 0.6rem; font-weight: 900; padding: 5px 40px; transform: rotate(45deg); }
         
-        /* Grid de Seleção */
-        .grid-bens { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; margin-bottom: 30px; }
-        .item-bem { border: 2px solid #eee; border-radius: 10px; padding: 15px; text-align: center; cursor: pointer; transition: 0.3s; }
-        .item-bem.active { border-color: var(--vnc-accent); background: #f0f7ff; transform: translateY(-3px); }
-        .item-bem span { display: block; font-size: 2rem; margin-bottom: 10px; }
-
-        /* Inputs Estilizados */
-        .input-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; background: #fafafa; padding: 20px; border-radius: 10px; }
-        .field { position: relative; }
-        .field label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 5px; color: #666; }
-        .field span.prefix { position: absolute; left: 12px; top: 32px; color: #999; }
-        .field input { width: 100%; padding: 12px 12px 12px 40px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px; font-weight: bold; }
-
-        /* Comparativo Modalidades */
-        .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-top: 20px; }
-        .card { border: 1px solid #e0e0e0; border-radius: 12px; padding: 25px; position: relative; }
-        .card.vnc { border-top: 5px solid var(--vnc-accent); background: #f8fbff; }
-        .card h3 { margin-top: 0; font-size: 1.1rem; }
-        .tag-vnc { position: absolute; top: 10px; right: 10px; background: var(--vnc-accent); color: white; padding: 4px 8px; border-radius: 4px; font-size: 10px; }
+        .card h3 { margin: 0 0 15px 0; font-size: 1rem; color: #64748b; }
+        .valor-principal { font-size: 2.2rem; font-weight: 900; color: var(--vnc-blue); margin: 10px 0; }
+        .vnc .valor-principal { color: var(--vnc-accent); }
         
-        .valor-principal { font-size: 1.8rem; font-weight: 900; color: var(--vnc-accent); margin: 15px 0; }
-        .detalhes { font-size: 13px; color: #555; border-top: 1px solid #eee; padding-top: 15px; }
-        .detalhes div { margin-bottom: 8px; display: flex; justify-content: space-between; }
+        .detalhes { margin-top: 20px; border-top: 1px solid #f1f5f9; padding-top: 20px; }
+        .detalhes div { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 10px; }
+        .detalhes b { color: #1e293b; }
 
-        /* Formulário de Lead */
-        .form-lead { background: #f0f4f8; padding: 25px; border-radius: 12px; margin-top: 40px; text-align: center; }
-        .btn-enviar { width: 100%; max-width: 400px; padding: 18px; background: #25D366; color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; font-weight: bold; margin-top: 15px; }
-        
-        .btn-admin { display: block; margin: 50px auto; background: none; border: none; color: #ccc; font-size: 10px; cursor: pointer; }
-        #adminArea { display: none; background: #333; color: #fff; padding: 20px; border-radius: 8px; margin-top: 20px; }
+        .btn-whats { width: 100%; padding: 20px; background: #22c55e; color: #fff; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 800; cursor: pointer; margin-top: 30px; transition: 0.3s; box-shadow: 0 4px 14px 0 rgba(34, 197, 94, 0.39); }
+        .btn-whats:hover { background: #16a34a; transform: scale(1.02); }
 
-        @media (max-width: 768px) { .compare-grid { grid-template-columns: 1fr; } }
+        .admin-link { display: block; text-align: center; margin-top: 50px; color: #cbd5e1; font-size: 0.7rem; cursor: pointer; text-decoration: none; }
     </style>
 </head>
 <body>
 
 <div class="top-bar">VNC INVESTIMENTOS</div>
 
-<div class="hero">
-    <h1>Simulador de Plano Direto</h1>
-    <p>Personalize seu parcelamento e agende uma consultoria gratuita.</p>
-</div>
-
 <div class="container">
+    <h2>1. O que você deseja simular?</h2>
     <div class="grid-bens">
-        <div class="item-bem active" onclick="setBem(this, 'Moto', 0.19, 0.40)"><span>🏍️</span>Moto</div>
-        <div class="item-bem" onclick="setBem(this, 'Carro', 0.21, 0.40)"><span>🚗</span>Carro</div>
-        <div class="item-bem" onclick="setBem(this, 'Casa', 0.25, 0.75)"><span>🏠</span>Casa / Lote</div>
-        <div class="item-bem" onclick="setBem(this, 'Maquinário', 0.25, 0.75)"><span>🚜</span>Maquinário</div>
-        <div class="item-bem" onclick="setBem(this, 'Serviços', 0.22, 0.40)"><span>✈️</span>Serviços</div>
+        <div class="item-bem active" onclick="setBem(this, 'Moto', 0.19, 0.40)">
+            <span class="icon">🏍️</span>
+            <span class="label">MOTO</span>
+        </div>
+        <div class="item-bem" onclick="setBem(this, 'Carro', 0.21, 0.40)">
+            <span class="icon">🚗</span>
+            <span class="label">CARRO</span>
+        </div>
+        <div class="item-bem" onclick="setBem(this, 'Imóvel', 0.25, 0.75)">
+            <span class="icon">🏠</span>
+            <span class="label">IMÓVEL</span>
+        </div>
+        <div class="item-bem" onclick="setBem(this, 'Maquinário', 0.25, 0.75)">
+            <span class="icon">🚜</span>
+            <span class="label">MAQUINÁRIO</span>
+        </div>
+        <div class="item-bem" onclick="setBem(this, 'Serviços', 0.22, 0.40)">
+            <span class="icon">✈️</span>
+            <span class="label">SERVIÇOS</span>
+        </div>
     </div>
 
+    <h2>2. Simulação de Valores</h2>
     <div class="input-box">
         <div class="field">
-            <label>VALOR DO BEM</label>
-            <span class="prefix">R$</span>
-            <input type="number" id="vTotal" value="60000" oninput="calcular()">
+            <label>Valor do Bem</label>
+            <input type="text" id="vTotal" class="money" value="8000000">
         </div>
         <div class="field">
-            <label>VALOR DA ENTRADA</label>
-            <span class="prefix">R$</span>
-            <input type="number" id="vEntrada" value="10000" oninput="calcular()">
+            <label>Sua Entrada</label>
+            <input type="text" id="vEntrada" class="money" value="1000000">
         </div>
         <div class="field">
-            <label>PARCELA DESEJADA</label>
-            <span class="prefix">R$</span>
-            <input type="number" id="vDesejado" placeholder="Ex: 800" oninput="calcular()">
+            <label>Quanto deseja pagar por mês?</label>
+            <input type="text" id="vDesejado" class="money" placeholder="Ex: R$ 1.200,00">
         </div>
     </div>
 
     <div class="compare-grid">
         <div class="card">
-            <h3>Financiamento Bancário</h3>
-            <div id="txtParcelaFinan" class="valor-principal">R$ 0,00</div>
+            <h3>Financiamento</h3>
+            <div id="resFinan" class="valor-principal">R$ 0,00</div>
             <div class="detalhes">
-                <div><span>Prazo Restrito:</span> <b id="prazoFinanLabel">48 meses</b></div>
-                <div><span>Juros sobre valor total:</span> <b id="jurosFinanLabel">40%</b></div>
-                <div><span>Requisito:</span> <b>Score Alto</b></div>
+                <div><span>Prazo:</span> <b id="pFinan">48 meses</b></div>
+                <div><span>Taxa Total:</span> <b id="tFinan">40%</b></div>
+                <div><span>Burocracia:</span> <b>ALTA</b></div>
             </div>
         </div>
 
         <div class="card vnc">
-            <span class="tag-vnc">RECOMENDADO</span>
-            <h3>Plano da Empresa (VNC)</h3>
-            <div id="txtParcelaVNC" class="valor-principal">R$ 0,00</div>
+            <h3>Plano Direto VNC</h3>
+            <div id="resVNC" class="valor-principal">R$ 0,00</div>
             <div class="detalhes">
-                <div><span>Aprovação:</span> <b>Facilitada (Sem Burocracia)</b></div>
-                <div><span>Prazos:</span> <b id="prazoVNCLabel">48 meses</b></div>
-                <div><span>Score / Nome Sujo:</span> <b>Aceitamos</b></div>
+                <div><span>Prazo Sugerido:</span> <b id="pVNC">48x</b></div>
+                <div><span>Aprovação:</span> <b>IMEDIATA</b></div>
+                <div><span>Sem Consulta:</span> <b>SPC/SERASA</b></div>
             </div>
-            <input type="range" id="prazoSlider" min="12" max="120" value="48" style="width:100%; margin-top:20px;" oninput="calcular()">
+            <input type="range" id="prazoSlider" min="12" max="120" value="48" style="width:100%; margin-top:15px; cursor:pointer;" oninput="calcular()">
         </div>
     </div>
 
-    <div class="form-lead">
-        <h3>Informe seus dados para agendar com um especialista</h3>
-        <div class="input-box" style="background:transparent; padding:0; margin-bottom:10px;">
-            <div class="field"><label>SEU NOME COMPLETO</label><input type="text" id="nome" placeholder="Ex: João Silva" style="padding-left:15px;"></div>
-            <div class="field"><label>SEU WHATSAPP</label><input type="tel" id="tel" placeholder="(00) 00000-0000" style="padding-left:15px;"></div>
+    <div style="margin-top:40px; padding:30px; background:#f8fafc; border-radius:16px;">
+        <div class="input-box" style="background:none; padding:0; margin-bottom:0;">
+            <div class="field"><label>Seu Nome</label><input type="text" id="nome" placeholder="Digite seu nome"></div>
+            <div class="field"><label>Seu WhatsApp</label><input type="tel" id="tel" placeholder="(00) 00000-0000"></div>
         </div>
-        <button class="btn-enviar" onclick="enviarWhatsApp()">Enviar Simulação e Agendar Agora</button>
+        <button class="btn-whats" onclick="enviar()">Agendar Visita e Garantir Aprovação</button>
     </div>
 
-    <button class="btn-admin" onclick="toggleAdmin()">Acesso Administrativo</button>
-    <div id="adminArea">
-        <h4>Histórico de Leads</h4>
+    <a class="admin-link" onclick="$('#adminArea').toggle()">Painel de Controle</a>
+    <div id="adminArea" style="display:none; background:#1e293b; color:white; padding:20px; border-radius:12px; margin-top:10px;">
         <ul id="leadList"></ul>
     </div>
 </div>
 
 <script>
-    let currentBem = "Moto";
-    let taxEmp = 0.19;
-    let taxFinan = 0.40;
-
-    function setBem(el, nome, tE, tF) {
-        document.querySelectorAll('.item-bem').forEach(i => i.classList.remove('active'));
-        el.classList.add('active');
-        currentBem = nome;
-        taxEmp = tE;
-        taxFinan = tF;
+    $(function() {
+        $('.money').maskMoney({prefix:'R$ ', thousands:'.', decimal:',', affixesStay: true});
         
-        const slider = document.getElementById('prazoSlider');
-        if(nome === 'Casa' || nome === 'Maquinário') {
-            slider.max = 500;
-        } else {
-            slider.max = 120;
-            if(slider.value > 120) slider.value = 120;
+        // Listener para atualizar sempre que mudar valor
+        $('.money').on('keyup', function() {
+            if(this.id === 'vDesejado') calcularInverso();
+            else calcular();
+        });
+    });
+
+    let bem = "Moto"; let txE = 0.19; let txF = 0.40;
+
+    function getVal(id) { return $("#"+id).maskMoney('unmasked')[0] || 0; }
+
+    function setBem(el, n, e, f) {
+        $(".item-bem").removeClass("active"); $(el).addClass("active");
+        bem = n; txE = e; txF = f;
+        let s = document.getElementById('prazoSlider');
+        s.max = (n === 'Imóvel' || n === 'Maquinário') ? 500 : 120;
+        calcular();
+    }
+
+    function calcularInverso() {
+        let vD = getVal('vDesejado');
+        if(vD > 200) {
+            let totalVNC = (getVal('vTotal') - getVal('vEntrada')) + (getVal('vTotal') * txE);
+            let pSug = Math.round(totalVNC / vD);
+            let sMax = parseInt(document.getElementById('prazoSlider').max);
+            if(pSug > sMax) pSug = sMax; if(pSug < 12) pSug = 12;
+            document.getElementById('prazoSlider').value = pSug;
         }
         calcular();
     }
 
     function calcular() {
-        const vTotal = parseFloat(document.getElementById('vTotal').value) || 0;
-        const vEntrada = parseFloat(document.getElementById('vEntrada').value) || 0;
-        const vDesejado = parseFloat(document.getElementById('vDesejado').value) || 0;
-        let prazoVNC = parseInt(document.getElementById('prazoSlider').value);
-        const saldo = vTotal - vEntrada;
+        let vT = getVal('vTotal'), vE = getVal('vEntrada'), pE = parseInt(document.getElementById('prazoSlider').value);
+        let sal = vT - vE;
 
-        // Regra de Financiamento
-        const prazoFinan = (currentBem === 'Casa' || currentBem === 'Maquinário') ? 350 : 48;
-        const totalFinan = saldo + (vTotal * taxFinan);
-        const parcelaFinan = (totalFinan / prazoFinan) * 1.023;
+        let pF = (bem === 'Imóvel' || bem === 'Maquinário') ? 350 : 48;
+        let vF = ((sal + (vT * txF)) / pF) * 1.023;
+        $("#resFinan").text(vF.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}));
+        $("#pFinan").text(pF + " meses"); $("#tFinan").text((txF*100)+"%");
 
-        document.getElementById('txtParcelaFinan').innerText = `R$ ${parcelaFinan.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
-        document.getElementById('prazoFinanLabel').innerText = `${prazoFinan} meses`;
-        document.getElementById('jurosFinanLabel').innerText = `${(taxFinan*100)}%`;
-
-        // Regra VNC - Se o cliente preencher parcela desejada, calcula o prazo
-        const totalVNC = saldo + (vTotal * taxEmp);
-        
-        if(vDesejado > 200) {
-            let prazoSugerido = Math.round(totalVNC / vDesejado);
-            if(prazoSugerido > document.getElementById('prazoSlider').max) prazoSugerido = document.getElementById('prazoSlider').max;
-            if(prazoSugerido < 12) prazoSugerido = 12;
-            document.getElementById('prazoSlider').value = prazoSugerido;
-            prazoVNC = prazoSugerido;
-        }
-
-        const parcelaVNC = totalVNC / prazoVNC;
-        document.getElementById('txtParcelaVNC').innerText = `R$ ${parcelaVNC.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
-        document.getElementById('prazoVNCLabel').innerText = `${prazoVNC}x`;
+        let vV = (sal + (vT * txE)) / pE;
+        $("#resVNC").text(vV.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}));
+        $("#pVNC").text(pE + "x");
     }
 
-    function enviarWhatsApp() {
-        const nome = document.getElementById('nome').value;
-        const tel = document.getElementById('tel').value;
-        if(!nome || !tel) { alert("Preencha seus dados!"); return; }
-
-        const log = `${new Date().toLocaleTimeString()} - ${nome} (${tel}) simulou ${currentBem} de R$${document.getElementById('vTotal').value}`;
+    function enviar() {
+        let n = $("#nome").val(), t = $("#tel").val();
+        if(!n || !t) return alert("Por favor, preencha seu nome e zap!");
+        
+        let msg = `Olá VNC! Me chamo ${n}. Simulei um(a) ${bem} de R$ ${getVal('vTotal').toLocaleString('pt-BR')}. No Plano Empresa ficou ${$("#pVNC").text()} de ${$("#resVNC").text()}. Quero agendar!`;
+        
         let leads = JSON.parse(localStorage.getItem('vnc_leads') || "[]");
-        leads.push(log);
+        leads.push(`${new Date().toLocaleString()} - ${n} (${t}) -> ${bem}`);
         localStorage.setItem('vnc_leads', JSON.stringify(leads));
 
-        const msg = `Olá VNC! Me chamo ${nome}. Simulei um(a) ${currentBem} de R$${document.getElementById('vTotal').value} no Plano da Empresa. Ficou em ${document.getElementById('prazoVNCLabel').innerText} de ${document.getElementById('txtParcelaVNC').innerText}. Quero agendar!`;
         window.open(`https://wa.me/5599999999999?text=${encodeURIComponent(msg)}`);
     }
 
-    function toggleAdmin() {
-        const area = document.getElementById('adminArea');
-        area.style.display = (area.style.display === 'block') ? 'none' : 'block';
-        const list = document.getElementById('leadList');
-        list.innerHTML = "";
-        JSON.parse(localStorage.getItem('vnc_leads') || "[]").forEach(l => {
-            let li = document.createElement('li'); li.innerText = l; list.appendChild(li);
-        });
-    }
-
-    calcular();
+    setTimeout(calcular, 500);
 </script>
+
 </body>
 </html>
