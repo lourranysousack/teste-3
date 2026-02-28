@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VNC Investimentos | Simulador Estilo BV</title>
+    <title>VNC Investimentos | Simulador Oficial</title>
     <style>
-        /* Estilo Inspirado no BV */
         :root {
-            --bv-blue: #002e5d;
-            --bv-light-blue: #0067b1;
+            --vnc-blue: #002e5d;
+            --vnc-light-blue: #0067b1;
             --bg-gray: #f4f7fa;
             --text-gray: #4a4a4a;
             --success: #28a745;
@@ -27,12 +26,11 @@
             background-color: white;
             padding: 15px;
             text-align: center;
-            border-bottom: 3px solid var(--bv-blue);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-bottom: 3px solid var(--vnc-blue);
         }
 
         .navbar h1 {
-            color: var(--bv-blue);
+            color: var(--vnc-blue);
             margin: 0;
             font-size: 1.2rem;
             font-weight: 800;
@@ -41,16 +39,16 @@
 
         .container {
             max-width: 800px;
-            margin: 30px auto;
+            margin: 20px auto;
             padding: 0 15px;
         }
 
-        /* Seleção de Bens (Estilo App) */
         .selection-title {
             font-weight: 700;
-            color: var(--bv-blue);
+            color: var(--vnc-blue);
             margin-bottom: 15px;
             font-size: 0.9rem;
+            text-align: center;
         }
 
         .grid-bens {
@@ -79,18 +77,16 @@
         .card-bem span {
             display: block;
             padding: 8px 0;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 700;
-            color: var(--bv-blue);
+            color: var(--vnc-blue);
         }
 
         .card-bem.active {
-            border: 2px solid var(--bv-light-blue);
+            border: 2px solid var(--vnc-light-blue);
             box-shadow: 0 4px 10px rgba(0,103,177,0.2);
-            transform: translateY(-2px);
         }
 
-        /* Formulário de Valores */
         .card-input {
             background: white;
             padding: 25px;
@@ -99,20 +95,9 @@
             margin-bottom: 30px;
         }
 
-        .input-group {
-            margin-bottom: 20px;
-            position: relative;
-        }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--vnc-blue); margin-bottom: 8px; }
 
-        .input-group label {
-            display: block;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--bv-blue);
-            margin-bottom: 8px;
-        }
-
-        /* Campo com Cifrão Fixo */
         .currency-input {
             position: relative;
             display: flex;
@@ -124,21 +109,19 @@
             position: absolute;
             left: 15px;
             font-weight: 700;
-            color: var(--bv-blue);
-            font-size: 1.1rem;
+            color: var(--vnc-blue);
         }
 
         .currency-input input {
             width: 100%;
-            padding: 12px 12px 12px 45px;
+            padding: 12px 12px 12px 40px;
             border: 1px solid #ccc;
             border-radius: 6px;
             font-size: 1.2rem;
             font-weight: 700;
-            color: var(--bv-blue);
+            color: var(--vnc-blue);
         }
 
-        /* Resultados Lado a Lado */
         .comparison {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -152,53 +135,19 @@
             border: 1px solid #eee;
         }
 
-        .res-box.vnc {
-            border: 2px solid var(--bv-blue);
-            background: #fdfdfd;
-        }
+        .res-box.vnc { border: 2px solid var(--vnc-blue); background: #fdfdfd; }
+        .res-box h3 { margin-top: 0; font-size: 0.8rem; text-transform: uppercase; color: #888; }
+        
+        .price-display { font-size: 1.8rem; font-weight: 800; color: var(--danger); margin: 10px 0; }
+        .vnc .price-display { color: var(--success); }
 
-        .res-box h3 {
-            margin-top: 0;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            color: var(--gray);
-        }
+        .info-list { padding: 0; list-style: none; font-size: 0.8rem; }
+        .info-list li { padding: 6px 0; border-bottom: 1px solid #f4f4f4; display: flex; align-items: center; }
+        .bad::before { content: "✕ "; color: var(--danger); font-weight: bold; margin-right: 5px; }
+        .good::before { content: "✓ "; color: var(--success); font-weight: bold; margin-right: 5px; }
 
-        .price-display {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--danger);
-            margin: 10px 0;
-        }
-
-        .vnc .price-display {
-            color: var(--success);
-        }
-
-        .info-list {
-            padding: 0;
-            list-style: none;
-            font-size: 0.8rem;
-        }
-
-        .info-list li {
-            padding: 6px 0;
-            border-bottom: 1px solid #f4f4f4;
-            display: flex;
-            align-items: center;
-        }
-
-        .info-list li::before {
-            margin-right: 8px;
-            font-weight: bold;
-        }
-
-        .bad::before { content: "✕"; color: var(--danger); }
-        .good::before { content: "✓"; color: var(--success); }
-
-        /* Rodapé de Contato */
         .form-footer {
-            background: var(--bv-blue);
+            background: var(--vnc-blue);
             padding: 30px;
             border-radius: 12px;
             margin-top: 30px;
@@ -206,15 +155,8 @@
             color: white;
         }
 
-        .form-footer input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 12px;
-            border-radius: 6px;
-            border: none;
-            box-sizing: border-box;
-        }
-
+        .form-footer input { width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 6px; border: none; box-sizing: border-box; }
+        
         .btn-zap {
             background: var(--success);
             color: white;
@@ -238,26 +180,26 @@
 </div>
 
 <div class="container">
-    <div class="selection-title">O que você deseja conquistar hoje?</div>
+    <div class="selection-title">SELECIONE A CATEGORIA</div>
     <div class="grid-bens">
-        <div class="card-bem active" onclick="setCat(this, 'Moto', 0.19)">
-            <img src="https://images.pexels.com/photos/104842/bmw-vehicle-ride-bike-104842.jpeg?auto=compress&w=200" alt="Moto">
+        <div class="card-bem active" onclick="setCat(this, 'Moto', 0.19, 0.40)">
+            <img src="https://images.pexels.com/photos/104842/bmw-vehicle-ride-bike-104842.jpeg?auto=compress&w=200">
             <span>MOTOS</span>
         </div>
-        <div class="card-bem" onclick="setCat(this, 'Carro', 0.21)">
-            <img src="https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?auto=compress&w=200" alt="Carro">
+        <div class="card-bem" onclick="setCat(this, 'Carro', 0.21, 0.40)">
+            <img src="https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?auto=compress&w=200">
             <span>CARROS</span>
         </div>
-        <div class="card-bem" onclick="setCat(this, 'Imóvel', 0.25)">
-            <img src="https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&w=200" alt="Casa">
-            <span>IMÓVEIS</span>
+        <div class="card-bem" onclick="setCat(this, 'Imóvel / Fazenda', 0.25, 0.75)">
+            <img src="https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&w=200">
+            <span>IMÓVEIS / FAZENDA</span>
         </div>
-        <div class="card-bem" onclick="setCat(this, 'Maquinário', 0.25)">
-            <img src="https://images.pexels.com/photos/259209/pexels-photo-259209.jpeg?auto=compress&w=200" alt="Máquina">
-            <span>MÁQUINAS</span>
+        <div class="card-bem" onclick="setCat(this, 'Maquinário', 0.25, 0.75)">
+            <img src="https://images.pexels.com/photos/259209/pexels-photo-259209.jpeg?auto=compress&w=200">
+            <span>MAQUINÁRIO</span>
         </div>
-        <div class="card-bem" onclick="setCat(this, 'Serviços', 0.20)">
-            <img src="https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&w=200" alt="Serviço">
+        <div class="card-bem" onclick="setCat(this, 'Serviços', 0.22, 0.40)">
+            <img src="https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&w=200">
             <span>SERVIÇOS</span>
         </div>
     </div>
@@ -266,20 +208,20 @@
         <div class="input-group">
             <label>VALOR TOTAL DO BEM</label>
             <div class="currency-input">
-                <input type="number" id="vTotal" value="50000" oninput="calc()">
+                <input type="number" id="vTotal" value="100000" oninput="calc()">
             </div>
         </div>
 
         <div class="input-group">
             <label>VALOR DA ENTRADA</label>
             <div class="currency-input">
-                <input type="number" id="vEntrada" value="5000" oninput="calc()">
+                <input type="number" id="vEntrada" value="10000" oninput="calc()">
             </div>
         </div>
 
         <div class="input-group">
-            <label>PRAZO: <span id="txtPrazo" style="color:var(--bv-light-blue)">48</span> MESES</label>
-            <input type="range" id="prazo" min="12" max="120" value="48" style="width: 100%; accent-color: var(--bv-blue);" oninput="calc()">
+            <label>PRAZO: <span id="txtPrazo" style="color:var(--vnc-light-blue)">48</span> MESES</label>
+            <input type="range" id="prazo" min="12" max="120" value="48" style="width: 100%; accent-color: var(--vnc-blue);" oninput="calc()">
         </div>
     </div>
 
@@ -288,10 +230,10 @@
             <h3>Financiamento Bancário</h3>
             <div class="price-display" id="resFinan">R$ 0,00</div>
             <ul class="info-list">
-                <li class="bad">Veículos: Apenas ano 2016 em diante</li>
+                <li class="bad">Apenas ano 2016 em diante</li>
                 <li class="bad">Exige Nome Limpo e Score Alto</li>
                 <li class="bad">Exige CNH do Condutor</li>
-                <li class="bad">Taxas de juros abusivas</li>
+                <li class="bad">Alienação Bancária Total</li>
             </ul>
         </div>
 
@@ -308,24 +250,23 @@
     </div>
 
     <div class="form-footer">
-        <h3 style="margin-top:0">Fale com um Especialista BV/VNC</h3>
-        <p style="font-size:0.8rem; margin-bottom:20px;">Garantimos a melhor taxa do mercado para o seu perfil.</p>
-        <input type="text" id="nome" placeholder="Nome Completo">
+        <h3 style="margin-top:0">GARANTIR MINHA APROVAÇÃO</h3>
+        <input type="text" id="nome" placeholder="Seu Nome Completo">
         <input type="tel" id="tel" placeholder="Seu WhatsApp">
-        <button class="btn-zap" onclick="enviar()">SOLICITAR APROVAÇÃO</button>
+        <button class="btn-zap" onclick="enviar()">MARQUE UM HORÁRIO AGORA MESMO</button>
     </div>
 </div>
 
 <script>
     let catNome = "Moto";
     let taxaVNC = 0.19;
+    let taxaFinanTotal = 0.40;
 
-    function setCat(el, nome, taxa) {
+    function setCat(el, nome, tV, tF) {
         document.querySelectorAll('.card-bem').forEach(c => c.classList.remove('active'));
         el.classList.add('active');
-        catNome = nome;
-        taxaVNC = taxa;
-        document.getElementById('prazo').max = (nome === 'Imóvel' || nome === 'Maquinário') ? 240 : 120;
+        catNome = nome; taxaVNC = tV; taxaFinanTotal = tF;
+        document.getElementById('prazo').max = (nome.includes('Imóvel') || nome === 'Maquinário') ? 360 : 120;
         calc();
     }
 
@@ -341,12 +282,12 @@
         document.getElementById('txtPrazo').innerText = p;
         let saldo = vT - vE;
 
-        // VNC: (Saldo + Taxa Admin fixa) / Prazo
+        // VNC: (Saldo + (Valor Total * Taxa Empresa)) / Prazo
         let pVNC = (saldo + (vT * taxaVNC)) / p;
 
-        // Banco: Simulação de Juros Compostos (1.95% a.m.)
-        let j = 0.0195;
-        let pB = saldo * (j / (1 - Math.pow(1 + j, -p)));
+        // FINANCIAMENTO: (Saldo + (Valor Total * Taxa Finan Pedida)) / Prazo Fixo (ex: 48)
+        let prazoPadrao = (catNome.includes('Imóvel')) ? 240 : 48;
+        let pB = (saldo + (vT * taxaFinanTotal)) / prazoPadrao;
 
         document.getElementById('resVNC').innerText = formatarReal(pVNC);
         document.getElementById('resFinan').innerText = formatarReal(pB);
@@ -360,22 +301,19 @@
         
         if(!n || !t) return alert("Por favor, preencha nome e zap.");
 
-        let msg = `Olá! Me chamo ${n}. Simulei um ${catNome} de ${total}. Pelo Plano VNC ficou ${document.getElementById('prazo').value}x de ${parc}. Quero saber como aprovar!`;
+        let msg = `Olá! Me chamo ${n}. Fiz uma simulação de um ${catNome} no valor de ${total}. No Plano VNC ficou ${document.getElementById('prazo').value}x de ${parc}. Quero marcar um horário!`;
         
-        // Enviar para o seu banco de dados (Formspree)
         fetch("https://formspree.io/f/xreavgol", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ Nome: n, Zap: t, Bem: catNome, Parcela: parc, Valor: total })
         });
 
-        // Abrir WhatsApp (Coloque seu numero aqui)
+        // COLOQUE SEU NUMERO ABAIXO
         window.open(`https://wa.me/5599999999999?text=${encodeURIComponent(msg)}`);
     }
 
-    // Calcular no início
     calc();
 </script>
-
 </body>
 </html>
