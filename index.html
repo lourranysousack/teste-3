@@ -3,100 +3,297 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VNC Investimentos | Private Selection</title>
+    <title>VNC Investimentos | Simulador Oficial</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
     <style>
         :root {
-            --vnc-gold: #c5a059;
-            --vnc-dark: #0a0e14;
-            --vnc-card: #161b22;
-            --text-main: #e6edf3;
-            --accent: #238636;
+            --vnc-blue: #003366;
+            --vnc-gold: #b89352;
+            --vnc-gray: #f4f7f9;
+            --text-dark: #1a1a1a;
         }
 
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background-color: var(--vnc-dark);
-            color: var(--text-main);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--vnc-gray);
+            color: var(--text-dark);
             margin: 0;
-            line-height: 1.6;
+            padding: 0;
         }
 
-        .navbar {
-            padding: 20px;
+        /* Topo */
+        .header {
+            background-color: var(--vnc-blue);
+            color: #ffffff;
+            padding: 25px;
             text-align: center;
-            background: rgba(10, 14, 20, 0.9);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid #30363d;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        .navbar h1 {
-            margin: 0;
-            font-size: 1.5rem;
-            letter-spacing: 4px;
-            color: var(--vnc-gold);
-            font-weight: 300;
-        }
+        .header h1 { margin: 0; font-size: 1.6rem; letter-spacing: 2px; text-transform: uppercase; }
 
         .container {
             max-width: 1000px;
-            margin: 40px auto;
-            padding: 20px;
+            margin: 30px auto;
+            padding: 0 15px;
         }
 
-        .selection-title {
-            text-align: center;
+        /* Seleção de Bens */
+        .grid-bens {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 15px;
             margin-bottom: 30px;
-            font-weight: 300;
-            color: #8b949e;
+        }
+
+        .card-item {
+            background: #fff;
+            border: 2px solid #e1e8ed;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .card-item:hover { border-color: var(--vnc-gold); transform: translateY(-3px); }
+        .card-item.active { 
+            border-color: var(--vnc-blue); 
+            background: #eef6ff; 
+            box-shadow: 0 5px 15px rgba(0,51,102,0.1);
+        }
+
+        .card-item .emoji { font-size: 2.5rem; display: block; margin-bottom: 10px; }
+        .card-item label { font-weight: 700; color: var(--vnc-blue); text-transform: uppercase; font-size: 0.8rem; }
+
+        /* Campos de Entrada */
+        .input-section {
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .input-field label {
+            display: block;
+            font-weight: 800;
+            color: #555;
+            margin-bottom: 8px;
+            font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+        }
+
+        .input-field input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--vnc-blue);
+            box-sizing: border-box;
+            background: #fdfdfd;
+        }
+
+        /* Comparativo */
+        .comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .res-box {
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #e1e8ed;
+        }
+
+        .res-box.featured {
+            border: 2px solid var(--vnc-gold);
+            background: #fffef5;
+        }
+
+        .res-box h3 { margin: 0; font-size: 0.9rem; color: #777; text-transform: uppercase; }
+        .price-val { font-size: 2.5rem; font-weight: 800; color: var(--vnc-blue); margin: 15px 0; }
+        .featured .price-val { color: var(--vnc-gold); }
+
+        .detail-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
             font-size: 0.9rem;
         }
 
-        .grid-bens {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 50px;
-        }
+        .detail-line b { color: var(--vnc-blue); }
 
-        .card-bem {
-            background: var(--vnc-card);
-            border: 1px solid #30363d;
-            border-radius: 12px;
-            padding: 25px 15px;
+        /* Slider de Prazo */
+        input[type=range] { width: 100%; margin-top: 20px; accent-color: var(--vnc-blue); cursor: pointer; }
+
+        /* Formulário de Lead */
+        .lead-form {
+            background: var(--vnc-blue);
+            color: #fff;
+            padding: 40px;
+            border-radius: 15px;
             text-align: center;
+            margin-top: 40px;
+        }
+
+        .lead-form input {
+            padding: 15px;
+            border-radius: 8px;
+            border: none;
+            margin: 10px;
+            width: 100%;
+            max-width: 300px;
+            font-size: 1rem;
+        }
+
+        .btn-send {
+            background: var(--vnc-gold);
+            color: #fff;
+            border: none;
+            padding: 20px 50px;
+            font-weight: 800;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .card-bem:hover {
-            border-color: var(--vnc-gold);
-            background: #1c2128;
-        }
-
-        .card-bem.active {
-            border-color: var(--vnc-gold);
-            background: rgba(197, 160, 89, 0.1);
-            box-shadow: 0 0 15px rgba(197, 160, 89, 0.1);
-        }
-
-        .card-bem .icon {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .card-bem label {
-            font-size: 0.75rem;
-            letter-spacing: 1px;
-            font-weight: 600;
             text-transform: uppercase;
-            color: #8b949e;
-            cursor: pointer;
+            font-size: 1.1rem;
+            margin-top: 15px;
+            transition: 0.3s;
+            width: 100%;
+            max-width: 330px;
         }
+
+        .btn-send:hover { transform: scale(1.03); background: #a38241; }
+
+        @media (max-width: 600px) {
+            .price-val { font-size: 1.8rem; }
+            .lead-form input { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>VNC Investimentos</h1>
+</div>
+
+<div class="container">
+    <div class="grid-bens">
+        <div class="card-item active" onclick="update(this, 'Moto', 0.19, 0.40)">
+            <span class="emoji">🏍️</span>
+            <label>Motos</label>
+        </div>
+        <div class="card-item" onclick="update(this, 'Carro', 0.21, 0.40)">
+            <span class="emoji">🚗</span>
+            <label>Carros</label>
+        </div>
+        <div class="card-item" onclick="update(this, 'Imóvel', 0.25, 0.75)">
+            <span class="emoji">🏠</span>
+            <label>Imóveis</label>
+        </div>
+        <div class="card-item" onclick="update(this, 'Maquinário', 0.25, 0.75)">
+            <span class="emoji">🚜</span>
+            <label>Máquinas</label>
+        </div>
+        <div class="card-item" onclick="update(this, 'Serviços', 0.22, 0.40)">
+            <span class="emoji">✈️</span>
+            <label>Serviços</label>
+        </div>
+    </div>
+
+    <div class="input-section">
+        <div class="input-field">
+            <label>Valor do Bem</label>
+            <input type="text" id="vTotal" class="money" value="80000,00">
+        </div>
+        <div class="input-field">
+            <label>Valor da Entrada</label>
+            <input type="text" id="vEntrada" class="money" value="10000,00">
+        </div>
+        <div class="input-field">
+            <label>Quanto quer pagar por mês?</label>
+            <input type="text" id="vDesejado" class="money" placeholder="Ex: R$ 1.500,00" onchange="calcInverso()">
+        </div>
+    </div>
+
+    <div class="comparison">
+        <div class="res-box">
+            <h3>Simulação Bancária</h3>
+            <div id="resFinan" class="price-val">R$ 0,00</div>
+            <div class="detail-line"><span>Prazo fixo:</span> <b id="pFinan">48 meses</b></div>
+            <div class="detail-line"><span>Taxas totais:</span> <b id="tFinan">40%</b></div>
+            <div class="detail-line"><span>Análise:</span> <b>Restrita</b></div>
+        </div>
+
+        <div class="res-box featured">
+            <h3>Plano Direto VNC</h3>
+            <div id="resVNC" class="price-val">R$ 0,00</div>
+            <div class="detail-line"><span>Prazo Escolhido:</span> <b id="pVNC">48x</b></div>
+            <div class="detail-line"><span>Score:</span> <b>Livre</b></div>
+            <div class="detail-line"><span>Status:</span> <b>Consultoria</b></div>
+            <input type="range" id="prazoSlider" min="12" max="120" value="48" oninput="calcular()">
+        </div>
+    </div>
+
+    <div class="lead-form">
+        <h2 style="margin-top:0">Falar com um Especialista</h2>
+        <p>Receba sua aprovação direto no WhatsApp</p>
+        <form id="vncForm" action="https://formspree.io/f/xreavgol" method="POST">
+            <input type="text" name="Nome" id="nome" placeholder="Seu Nome Completo" required>
+            <input type="tel" name="WhatsApp" id="tel" placeholder="Seu WhatsApp" required>
+            
+            <input type="hidden" name="Bem" id="hBem">
+            <input type="hidden" name="Valor_Bem" id="hTotal">
+            <input type="hidden" name="Parcela" id="hParcela">
+            <input type="hidden" name="Prazo" id="hPrazo">
+
+            <br>
+            <button type="button" class="btn-send" onclick="enviarTudo()">Solicitar Contato Agora</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $('.money').maskMoney({prefix:'R$ ', thousands:'.', decimal:',', affixesStay: true});
+        $('.money').on('keyup', calcular);
+    });
+
+    let bemAtual = "Moto"; let txEmp = 0.19; let txBnc = 0.40;
+
+    function getV(id) { return $("#"+id).maskMoney('unmasked')[0] || 0; }
+
+    function update(el, n, e, f) {
+        $(".card-item").removeClass("active"); $(el).addClass("active");
+        bemAtual = n; txEmp = e; txBnc = f;
+        let s = document.getElementById('prazoSlider');
+        s.max = (n === 'Imóvel' || n === 'Maquinário') ? 500 : 120;
+        calcular();
+    }
+
+    function calcInverso() {
+        let vD = getV('vDesejado');
+        if(vD > 100) {
+            let totalVNC = (getV('vTotal') - getV('vEntrada')) + (getV('vTotal') * txEmp);
+            let pSug = Math.round(totalVNC / vD);
+            let sMax = parseInt(document.getElementById('prazoSlider').max);
+            if(pSug > sMax) pSug = sMax; if(pSug < 12) pSug = 12;
+            document.getElementById('prazoSlider').value = pSug;
+        }
+        calcular();
+    }
+
+    function calcular() {
+        let vT = getV('vTotal'), vE = getV('vEntrada'), pE = parseInt(document.getElementById('prazoSlider').value);
+        let saldo = vT - vE;
+
+        let pF = (bemAtual === 'Imóvel' || bemAtual === 'Ma
