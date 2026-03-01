@@ -196,23 +196,23 @@
 <div class="container">
     <div class="selection-title">O QUE VOCÊ DESEJA ADQUIRIR?</div>
     <div class="grid-bens">
-        <div class="card-bem active" onclick="setCat(this, 'Moto', 0.19, 0.40, 4500, 450)">
+        <div class="card-bem active" onclick="setCat(this, 'Moto', 0.19, 0.40, 4500)">
             <img src="https://images.pexels.com/photos/104842/bmw-vehicle-ride-bike-104842.jpeg?auto=compress&w=200">
             <span>MOTOS</span>
         </div>
-        <div class="card-bem" onclick="setCat(this, 'Carro', 0.21, 0.40, 4500, 450)">
+        <div class="card-bem" onclick="setCat(this, 'Carro', 0.21, 0.40, 4500)">
             <img src="https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?auto=compress&w=200">
             <span>CARROS</span>
         </div>
-        <div class="card-bem" onclick="setCat(this, 'Imóvel / Fazenda', 0.25, 0.75, 20000, 450)">
+        <div class="card-bem" onclick="setCat(this, 'Imóvel / Fazenda', 0.25, 0.75, 20000)">
             <img src="https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&w=200">
             <span>IMÓVEIS / FAZENDA</span>
         </div>
-        <div class="card-bem" onclick="setCat(this, 'Maquinário', 0.25, 0.75, 20000, 450)">
+        <div class="card-bem" onclick="setCat(this, 'Maquinário', 0.25, 0.75, 20000)">
             <img src="https://images.pexels.com/photos/259209/pexels-photo-259209.jpeg?auto=compress&w=200">
             <span>MAQUINÁRIO</span>
         </div>
-        <div class="card-bem" onclick="setCat(this, 'Serviços', 0.22, 0.40, 6000, 450)">
+        <div class="card-bem" onclick="setCat(this, 'Serviços', 0.22, 0.40, 6000)">
             <img src="https://images.pexels.com/photos/2219024/pexels-photo-2219024.jpeg?auto=compress&w=200">
             <span>ESTÉTICA / VIAGEM / CONST.</span>
         </div>
@@ -222,14 +222,14 @@
         <div class="input-group">
             <label>VALOR TOTAL DO BEM</label>
             <div class="currency-input">
-                <input type="number" id="vTotal" value="100000" oninput="calc()">
+                <input type="number" id="vTotal" value="80000" oninput="calc()">
             </div>
         </div>
 
         <div class="input-group">
             <label>VALOR DA ENTRADA</label>
             <div class="currency-input">
-                <input type="number" id="vEntrada" value="20000" oninput="calc()">
+                <input type="number" id="vEntrada" value="10000" oninput="calc()">
             </div>
             <div id="msgErroEntrada" class="alert-min">Entrada mínima não atingida para esta categoria.</div>
         </div>
@@ -237,7 +237,6 @@
         <div class="input-group">
             <label>PRAZO: <span id="txtPrazo" style="color:var(--vnc-light-blue)">48</span> MESES</label>
             <input type="range" id="prazo" min="12" max="120" value="48" style="width: 100%; accent-color: var(--vnc-blue);" oninput="calc()">
-            <div id="msgErroParcela" class="alert-min">A parcela mínima permitida é de R$ 450,00.</div>
         </div>
     </div>
 
@@ -277,12 +276,11 @@
     let taxaVNC = 0.19;
     let taxaFinanTotal = 0.40;
     let minEntrada = 4500;
-    let minParcela = 450;
 
-    function setCat(el, nome, tV, tF, mE, mP) {
+    function setCat(el, nome, tV, tF, mE) {
         document.querySelectorAll('.card-bem').forEach(c => c.classList.remove('active'));
         el.classList.add('active');
-        catNome = nome; taxaVNC = tV; taxaFinanTotal = tF; minEntrada = mE; minParcela = mP;
+        catNome = nome; taxaVNC = tV; taxaFinanTotal = tF; minEntrada = mE;
         document.getElementById('prazo').max = (nome.includes('Imóvel') || nome === 'Maquinário') ? 360 : 120;
         calc();
     }
@@ -299,35 +297,31 @@
         
         document.getElementById('txtPrazo').innerText = p;
 
-        // Regras de Bloqueio
+        // Regra de Bloqueio por Entrada
         let erroEntrada = vEntrada < minEntrada;
-        let pVNCTemp = (saldo + (vTotal * taxaVNC)) / p;
-        let erroParcela = pVNCTemp < minParcela;
 
-        if (erroEntrada || erroParcela) {
-            document.getElementById('msgErroEntrada').style.display = erroEntrada ? 'block' : 'none';
-            document.getElementById('msgErroParcela').style.display = erroParcela ? 'block' : 'none';
+        if (erroEntrada) {
+            document.getElementById('msgErroEntrada').style.display = 'block';
             document.getElementById('resVNC').innerText = "---";
             document.getElementById('resFinan').innerText = "---";
-            document.getElementById('economia').innerText = "Aumente a entrada ou diminua o prazo";
+            document.getElementById('economia').innerText = "Ajuste o valor da entrada";
             document.getElementById('btnAcao').disabled = true;
             document.getElementById('btnAcao').style.opacity = "0.5";
             return;
         }
 
         document.getElementById('msgErroEntrada').style.display = 'none';
-        document.getElementById('msgErroParcela').style.display = 'none';
         document.getElementById('btnAcao').disabled = false;
         document.getElementById('btnAcao').style.opacity = "1";
 
-        // VNC
+        // Cálculo VNC
         let pVNC = (saldo + (vTotal * taxaVNC)) / p;
         let totalVNC = pVNC * p;
 
-        // Financiamento
-        let prazoPadrao = (catNome.includes('Imóvel')) ? 240 : 48;
-        let pFinan = (saldo + (vTotal * taxaFinanTotal)) / prazoPadrao;
-        let totalFinan = pFinan * prazoPadrao;
+        // Cálculo Financiamento (Prazo padrão mercado 48x ou 240x)
+        let prazoB = (catNome.includes('Imóvel')) ? 240 : 48;
+        let pFinan = (saldo + (vTotal * taxaFinanTotal)) / prazoB;
+        let totalFinan = pFinan * prazoB;
 
         document.getElementById('resVNC').innerText = formatarReal(pVNC);
         document.getElementById('resFinan').innerText = formatarReal(pFinan);
