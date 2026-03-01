@@ -70,14 +70,14 @@
 
         .card-bem img {
             width: 100%;
-            height: 70px;
+            height: 75px;
             object-fit: cover;
         }
 
         .card-bem span {
             display: block;
             padding: 8px 0;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             font-weight: 700;
             color: var(--vnc-blue);
         }
@@ -141,6 +141,17 @@
         .price-display { font-size: 1.8rem; font-weight: 800; color: var(--danger); margin: 10px 0; }
         .vnc .price-display { color: var(--success); }
 
+        .economy-tag {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            text-align: center;
+        }
+
         .info-list { padding: 0; list-style: none; font-size: 0.8rem; }
         .info-list li { padding: 6px 0; border-bottom: 1px solid #f4f4f4; display: flex; align-items: center; }
         .bad::before { content: "✕ "; color: var(--danger); font-weight: bold; margin-right: 5px; }
@@ -155,6 +166,7 @@
             color: white;
         }
 
+        .form-footer h3 { font-size: 1.1rem; margin-bottom: 20px; text-transform: uppercase; line-height: 1.4; }
         .form-footer input { width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 6px; border: none; box-sizing: border-box; }
         
         .btn-zap {
@@ -170,6 +182,8 @@
             text-transform: uppercase;
         }
 
+        .alert-min { color: var(--danger); font-size: 0.75rem; font-weight: bold; margin-top: 5px; display: none; }
+
         @media (max-width: 600px) { .comparison { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -180,27 +194,27 @@
 </div>
 
 <div class="container">
-    <div class="selection-title">SELECIONE A CATEGORIA</div>
+    <div class="selection-title">O QUE VOCÊ DESEJA ADQUIRIR?</div>
     <div class="grid-bens">
-        <div class="card-bem active" onclick="setCat(this, 'Moto', 0.19, 0.40)">
+        <div class="card-bem active" onclick="setCat(this, 'Moto', 0.19, 0.40, 4500, 450)">
             <img src="https://images.pexels.com/photos/104842/bmw-vehicle-ride-bike-104842.jpeg?auto=compress&w=200">
             <span>MOTOS</span>
         </div>
-        <div class="card-bem" onclick="setCat(this, 'Carro', 0.21, 0.40)">
+        <div class="card-bem" onclick="setCat(this, 'Carro', 0.21, 0.40, 4500, 450)">
             <img src="https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?auto=compress&w=200">
             <span>CARROS</span>
         </div>
-        <div class="card-bem" onclick="setCat(this, 'Imóvel / Fazenda', 0.25, 0.75)">
+        <div class="card-bem" onclick="setCat(this, 'Imóvel / Fazenda', 0.25, 0.75, 20000, 450)">
             <img src="https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&w=200">
             <span>IMÓVEIS / FAZENDA</span>
         </div>
-        <div class="card-bem" onclick="setCat(this, 'Maquinário', 0.25, 0.75)">
+        <div class="card-bem" onclick="setCat(this, 'Maquinário', 0.25, 0.75, 20000, 450)">
             <img src="https://images.pexels.com/photos/259209/pexels-photo-259209.jpeg?auto=compress&w=200">
             <span>MAQUINÁRIO</span>
         </div>
-        <div class="card-bem" onclick="setCat(this, 'Serviços', 0.22, 0.40)">
-            <img src="https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&w=200">
-            <span>SERVIÇOS</span>
+        <div class="card-bem" onclick="setCat(this, 'Serviços', 0.22, 0.40, 6000, 450)">
+            <img src="https://images.pexels.com/photos/2219024/pexels-photo-2219024.jpeg?auto=compress&w=200">
+            <span>ESTÉTICA / VIAGEM / CONST.</span>
         </div>
     </div>
 
@@ -215,13 +229,15 @@
         <div class="input-group">
             <label>VALOR DA ENTRADA</label>
             <div class="currency-input">
-                <input type="number" id="vEntrada" value="10000" oninput="calc()">
+                <input type="number" id="vEntrada" value="20000" oninput="calc()">
             </div>
+            <div id="msgErroEntrada" class="alert-min">Entrada mínima não atingida para esta categoria.</div>
         </div>
 
         <div class="input-group">
             <label>PRAZO: <span id="txtPrazo" style="color:var(--vnc-light-blue)">48</span> MESES</label>
             <input type="range" id="prazo" min="12" max="120" value="48" style="width: 100%; accent-color: var(--vnc-blue);" oninput="calc()">
+            <div id="msgErroParcela" class="alert-min">A parcela mínima permitida é de R$ 450,00.</div>
         </div>
     </div>
 
@@ -233,27 +249,26 @@
                 <li class="bad">Apenas ano 2016 em diante</li>
                 <li class="bad">Exige Nome Limpo e Score Alto</li>
                 <li class="bad">Exige CNH do Condutor</li>
-                <li class="bad">Alienação Bancária Total</li>
             </ul>
         </div>
 
         <div class="res-box vnc">
             <h3>Plano Empresa VNC</h3>
             <div class="price-display" id="resVNC">R$ 0,00</div>
+            <div class="economy-tag" id="economia">Você economiza: R$ 0,00</div>
             <ul class="info-list">
                 <li class="good"><b>Qualquer ano de fabricação</b></li>
                 <li class="good"><b>Aprovação com Score Baixo</b></li>
                 <li class="good"><b>Sem necessidade de CNH</b></li>
-                <li class="good"><b>Sem consulta SPC rigorosa</b></li>
             </ul>
         </div>
     </div>
 
     <div class="form-footer">
-        <h3 style="margin-top:0">GARANTIR MINHA APROVAÇÃO</h3>
+        <h3>Marcar um horário com um dos consultores da VNC Investimentos</h3>
         <input type="text" id="nome" placeholder="Seu Nome Completo">
         <input type="tel" id="tel" placeholder="Seu WhatsApp">
-        <button class="btn-zap" onclick="enviar()">MARQUE UM HORÁRIO AGORA MESMO</button>
+        <button class="btn-zap" id="btnAcao" onclick="enviar()">MARQUE UM HORÁRIO AGORA MESMO</button>
     </div>
 </div>
 
@@ -261,11 +276,13 @@
     let catNome = "Moto";
     let taxaVNC = 0.19;
     let taxaFinanTotal = 0.40;
+    let minEntrada = 4500;
+    let minParcela = 450;
 
-    function setCat(el, nome, tV, tF) {
+    function setCat(el, nome, tV, tF, mE, mP) {
         document.querySelectorAll('.card-bem').forEach(c => c.classList.remove('active'));
         el.classList.add('active');
-        catNome = nome; taxaVNC = tV; taxaFinanTotal = tF;
+        catNome = nome; taxaVNC = tV; taxaFinanTotal = tF; minEntrada = mE; minParcela = mP;
         document.getElementById('prazo').max = (nome.includes('Imóvel') || nome === 'Maquinário') ? 360 : 120;
         calc();
     }
@@ -275,22 +292,48 @@
     }
 
     function calc() {
-        let vT = parseFloat(document.getElementById('vTotal').value) || 0;
-        let vE = parseFloat(document.getElementById('vEntrada').value) || 0;
+        let vTotal = parseFloat(document.getElementById('vTotal').value) || 0;
+        let vEntrada = parseFloat(document.getElementById('vEntrada').value) || 0;
         let p = parseInt(document.getElementById('prazo').value);
+        let saldo = vTotal - vEntrada;
         
         document.getElementById('txtPrazo').innerText = p;
-        let saldo = vT - vE;
 
-        // VNC: (Saldo + (Valor Total * Taxa Empresa)) / Prazo
-        let pVNC = (saldo + (vT * taxaVNC)) / p;
+        // Regras de Bloqueio
+        let erroEntrada = vEntrada < minEntrada;
+        let pVNCTemp = (saldo + (vTotal * taxaVNC)) / p;
+        let erroParcela = pVNCTemp < minParcela;
 
-        // FINANCIAMENTO: (Saldo + (Valor Total * Taxa Finan Pedida)) / Prazo Fixo (ex: 48)
+        if (erroEntrada || erroParcela) {
+            document.getElementById('msgErroEntrada').style.display = erroEntrada ? 'block' : 'none';
+            document.getElementById('msgErroParcela').style.display = erroParcela ? 'block' : 'none';
+            document.getElementById('resVNC').innerText = "---";
+            document.getElementById('resFinan').innerText = "---";
+            document.getElementById('economia').innerText = "Aumente a entrada ou diminua o prazo";
+            document.getElementById('btnAcao').disabled = true;
+            document.getElementById('btnAcao').style.opacity = "0.5";
+            return;
+        }
+
+        document.getElementById('msgErroEntrada').style.display = 'none';
+        document.getElementById('msgErroParcela').style.display = 'none';
+        document.getElementById('btnAcao').disabled = false;
+        document.getElementById('btnAcao').style.opacity = "1";
+
+        // VNC
+        let pVNC = (saldo + (vTotal * taxaVNC)) / p;
+        let totalVNC = pVNC * p;
+
+        // Financiamento
         let prazoPadrao = (catNome.includes('Imóvel')) ? 240 : 48;
-        let pB = (saldo + (vT * taxaFinanTotal)) / prazoPadrao;
+        let pFinan = (saldo + (vTotal * taxaFinanTotal)) / prazoPadrao;
+        let totalFinan = pFinan * prazoPadrao;
 
         document.getElementById('resVNC').innerText = formatarReal(pVNC);
-        document.getElementById('resFinan').innerText = formatarReal(pB);
+        document.getElementById('resFinan').innerText = formatarReal(pFinan);
+        
+        let dif = Math.abs(totalFinan - totalVNC);
+        document.getElementById('economia').innerText = "Economia Total: " + formatarReal(dif);
     }
 
     function enviar() {
@@ -301,7 +344,7 @@
         
         if(!n || !t) return alert("Por favor, preencha nome e zap.");
 
-        let msg = `Olá! Me chamo ${n}. Fiz uma simulação de um ${catNome} no valor de ${total}. No Plano VNC ficou ${document.getElementById('prazo').value}x de ${parc}. Quero marcar um horário!`;
+        let msg = `Olá! Me chamo ${n}. Simulei um ${catNome} de ${total}. No Plano VNC ficou ${document.getElementById('prazo').value}x de ${parc}. Quero marcar um horário!`;
         
         fetch("https://formspree.io/f/xreavgol", {
             method: "POST",
@@ -309,7 +352,6 @@
             body: JSON.stringify({ Nome: n, Zap: t, Bem: catNome, Parcela: parc, Valor: total })
         });
 
-        // COLOQUE SEU NUMERO ABAIXO
         window.open(`https://wa.me/5599999999999?text=${encodeURIComponent(msg)}`);
     }
 
