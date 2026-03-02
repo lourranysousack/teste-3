@@ -7,38 +7,42 @@
     <style>
         :root {
             --vnc-dark: #000000;
-            --vnc-gold: #b89352; 
+            --vnc-gold: #b89352; /* Dourado exato da sua logo */
             --vnc-text: #ffffff;
             --danger: #ff4d4d;
         }
 
         body { font-family: 'Montserrat', sans-serif; background-color: #0a0a0a; color: #e0e0e0; margin: 0; padding: 0; }
         
-        .header { background-color: var(--vnc-dark); padding: 25px; text-align: center; border-bottom: 2px solid var(--vnc-gold); }
-        .header img { max-width: 220px; height: auto; display: block; margin: 0 auto; border-radius: 8px; }
+        /* Header com a Logo VIDANOVA */
+        .header { background-color: var(--vnc-dark); padding: 30px; text-align: center; border-bottom: 2px solid var(--vnc-gold); }
+        .header img { max-width: 250px; height: auto; display: block; margin: 0 auto; border-radius: 8px; }
 
         .container { max-width: 850px; margin: 20px auto; padding: 0 15px; }
         
-        .grid-bens { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; margin-bottom: 25px; }
-        .card-bem { background: #1a1a1a; border-radius: 10px; border: 1px solid #333; cursor: pointer; transition: 0.3s; text-align: center; overflow: hidden; height: 130px; }
-        .card-bem img { width: 100%; height: 75px; object-fit: cover; }
-        .card-bem span { display: block; padding: 8px 5px; font-size: 0.6rem; font-weight: 800; color: #ccc; text-transform: uppercase; line-height: 1.2; }
-        .card-bem.active { border: 2px solid var(--vnc-gold); background: #252525; transform: translateY(-3px); }
+        /* Grid de Categorias SEM FOTOS, focando no Texto e Dourado */
+        .grid-bens { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 25px; }
+        .card-bem { background: #1a1a1a; border-radius: 10px; border: 1px solid #333; cursor: pointer; transition: 0.3s; text-align: center; overflow: hidden; height: 60px; display: flex; align-items: center; justify-content: center;}
+        .card-bem span { display: block; padding: 10px; font-size: 0.75rem; font-weight: 800; color: #ccc; text-transform: uppercase; letter-spacing: 1px;}
+        .card-bem.active { border: 2px solid var(--vnc-gold); background: #252525; transform: translateY(-2px); }
         .card-bem.active span { color: var(--vnc-gold); }
 
+        /* Inputs Estilizados */
         .main-card { background: #151515; padding: 25px; border-radius: 15px; border: 1px solid #222; margin-bottom: 25px; }
         .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--vnc-gold); margin-bottom: 8px; text-transform: uppercase; }
+        .input-group label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--vnc-gold); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;}
         .cur-input { position: relative; display: flex; align-items: center; }
         .cur-input::before { content: "R$"; position: absolute; left: 15px; font-weight: bold; color: var(--vnc-gold); }
         .cur-input input { width: 100%; padding: 15px 15px 15px 45px; border: 1px solid #333; border-radius: 8px; font-size: 1.2rem; background: #000; color: #fff; font-weight: bold; }
 
+        /* Pergunta Score */
         .check-box { background: #1a1a1a; padding: 15px; border-radius: 10px; border-left: 4px solid var(--vnc-gold); margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; }
-        .check-box span { font-size: 0.85rem; font-weight: bold; padding-right: 10px; }
+        .check-box span { font-size: 0.85rem; font-weight: bold; padding-right: 10px; color: #fff; }
         .toggle-btn { display: flex; gap: 8px; }
         .t-btn { padding: 8px 15px; border-radius: 5px; border: 1px solid #444; background: #111; color: #fff; cursor: pointer; font-size: 0.75rem; font-weight: bold; }
         .t-btn.active { background: var(--vnc-gold); border-color: var(--vnc-gold); color: #000; }
 
+        /* Comparativo */
         .comparison { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         .res-box { background: #111; padding: 20px; border-radius: 12px; border: 1px solid #222; }
         .res-box.vnc { border: 2px solid var(--vnc-gold); background: #1a1a1a; }
@@ -59,37 +63,39 @@
         .info-li li { margin-bottom: 8px; display: flex; align-items: center; }
         .info-li li::before { content: "•"; color: var(--vnc-gold); font-weight: bold; margin-right: 8px; }
 
+        /* Footer com Foco no Dourado da Logo */
         .footer-cta { background: var(--vnc-gold); padding: 35px; border-radius: 15px; margin-top: 30px; text-align: center; color: #000; }
-        .footer-cta h3 { margin-bottom: 20px; text-transform: uppercase; font-weight: 900; font-size: 1.1rem; }
+        .footer-cta h3 { margin-bottom: 20px; text-transform: uppercase; font-weight: 900; font-size: 1.1rem; letter-spacing: 1px; }
         .footer-cta input { width: 100%; padding: 15px; margin-bottom: 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1); box-sizing: border-box; font-weight: bold; }
         .btn-final { background: #000; color: var(--vnc-gold); border: none; padding: 20px; width: 100%; border-radius: 8px; font-size: 1rem; font-weight: 900; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
         .btn-final:hover { transform: scale(1.02); }
 
-        @media (max-width: 600px) { .comparison { grid-template-columns: 1fr; } .grid-bens { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 600px) { .comparison { grid-template-columns: 1fr; } .grid-bens { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <img src="https://raw.githubusercontent.com/Lourranysousack/teste-3/main/WhatsApp%20Image%202026-03-02%20at%2012.47.14.jpeg" alt="VIDANOVA LOGO" onerror="this.src='https://i.imgur.com/uN8O7Uo.jpeg'">
+    <img src="https://raw.githubusercontent.com/Lourranysousack/teste-3/main/WhatsApp%20Image%202026-03-02%20at%2012.47.14.jpeg" alt="VIDANOVA LOGO">
 </div>
 
 <div class="container">
+    <div class="selection-title">Modalidade de Crédito</div>
     <div class="grid-bens" id="grid">
         <div class="card-bem active" onclick="setCat(this, 'Moto', 0.19, 0.72, 4500, true)">
-            <img src="https://images.pexels.com/photos/104842/bmw-vehicle-ride-bike-104842.jpeg?auto=compress&w=200"><span>Motos</span>
+            <span>Motos</span>
         </div>
         <div class="card-bem" onclick="setCat(this, 'Carro', 0.21, 0.75, 4500, true)">
-            <img src="https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?auto=compress&w=200"><span>Carros</span>
+            <span>Carros</span>
         </div>
         <div class="card-bem" onclick="setCat(this, 'Serviços', 0.22, 0.68, 6000, false)">
-            <img src="https://images.pexels.com/photos/2219024/pexels-photo-2219024.jpeg?auto=compress&w=200"><span>Viagem / Estética / Construção</span>
+            <span>Serviços</span>
         </div>
         <div class="card-bem" onclick="setCat(this, 'Imóvel', 0.25, 0.98, 20000, false)">
-            <img src="https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&w=200"><span>Imóveis / Fazenda</span>
+            <span>Imóveis</span>
         </div>
         <div class="card-bem" onclick="setCat(this, 'Maquinário', 0.25, 0.98, 20000, false)">
-            <img src="https://images.pexels.com/photos/2927515/pexels-photo-2927515.jpeg?auto=compress&w=200"><span>Maquinário Agrícola</span>
+            <span>Maquinário</span>
         </div>
     </div>
 
@@ -208,6 +214,7 @@
         let pV = document.getElementById('resVNC').innerText;
         let msg = `Olá! Me chamo ${n}. Simulei um ${_cat} no valor de ${format(parseFloat(document.getElementById('vTotal').value))}. No Plano Direto ficou ${document.getElementById('prazo').value}x de ${pV}. Gostaria de marcar um horário com um consultor.`;
 
+        // Troque pelo seu número real aqui
         window.open(`https://wa.me/5599999999999?text=${encodeURIComponent(msg)}`);
     }
 
