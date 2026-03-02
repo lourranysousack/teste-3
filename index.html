@@ -3,66 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VNC Investimentos | Simulador Oficial</title>
+    <title>VNC Investimentos | Simulador</title>
     <style>
-        :root {
-            --vnc-blue: #002e5d;
-            --vnc-light-blue: #0067b1;
-            --bg-gray: #f4f7fa;
-            --text-gray: #4a4a4a;
-            --success: #28a745;
-            --danger: #dc3545;
-        }
-
-        body { font-family: 'Open Sans', Arial, sans-serif; background-color: var(--bg-gray); color: var(--text-gray); margin: 0; padding: 0; }
-        .navbar { background-color: white; padding: 15px; text-align: center; border-bottom: 3px solid var(--vnc-blue); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .navbar h1 { color: var(--vnc-blue); margin: 0; font-size: 1.2rem; font-weight: 800; text-transform: uppercase; }
-
+        :root { --blue: #002e5d; --l-blue: #0067b1; --green: #28a745; --red: #dc3545; --bg: #f4f7fa; }
+        body { font-family: 'Open Sans', Arial, sans-serif; background: var(--bg); color: #444; margin: 0; padding: 0; }
+        .navbar { background: white; padding: 15px; text-align: center; border-bottom: 3px solid var(--blue); }
+        .navbar h1 { color: var(--blue); margin: 0; font-size: 1.2rem; text-transform: uppercase; }
         .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
-        .selection-title { font-weight: 700; color: var(--vnc-blue); margin-bottom: 15px; font-size: 0.9rem; text-align: center; text-transform: uppercase; }
-
-        /* Grid de Categorias */
-        .grid-bens { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin-bottom: 25px; }
-        .card-bem { background: white; border-radius: 8px; border: 1px solid #ddd; overflow: hidden; cursor: pointer; transition: 0.3s; text-align: center; }
-        .card-bem img { width: 100%; height: 75px; object-fit: cover; border-bottom: 1px solid #eee; }
-        .card-bem span { display: block; padding: 8px 2px; font-size: 0.65rem; font-weight: 800; color: var(--vnc-blue); height: 35px; display: flex; align-items: center; justify-content: center; }
-        .card-bem.active { border: 3px solid var(--vnc-light-blue); transform: scale(1.03); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        
+        /* Grid */
+        .grid-bens { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        .card-bem { background: white; border-radius: 8px; border: 1px solid #ddd; cursor: pointer; text-align: center; transition: 0.2s; overflow: hidden; }
+        .card-bem img { width: 100%; height: 70px; object-fit: cover; }
+        .card-bem span { display: block; padding: 5px; font-size: 0.6rem; font-weight: bold; color: var(--blue); }
+        .card-bem.active { border: 3px solid var(--l-blue); transform: scale(1.05); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
         /* Inputs */
-        .card-input { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; }
-        .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--vnc-blue); margin-bottom: 8px; }
-
-        .currency-input { position: relative; display: flex; align-items: center; }
-        .currency-input::before { content: "R$"; position: absolute; left: 15px; font-weight: 700; color: var(--vnc-blue); }
-        .currency-input input { width: 100%; padding: 14px 14px 14px 45px; border: 1px solid #ccc; border-radius: 8px; font-size: 1.2rem; font-weight: 700; color: var(--vnc-blue); }
+        .card-input { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 0.8rem; font-weight: bold; color: var(--blue); margin-bottom: 5px; }
+        .cur-input { position: relative; display: flex; align-items: center; }
+        .cur-input::before { content: "R$"; position: absolute; left: 12px; font-weight: bold; color: var(--blue); }
+        .cur-input input { width: 100%; padding: 12px 12px 12px 35px; border: 1px solid #ccc; border-radius: 6px; font-size: 1.1rem; font-weight: bold; }
 
         /* Comparativo */
-        .comparison { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .res-box { background: white; padding: 20px; border-radius: 12px; border: 1px solid #eee; min-height: 250px; }
-        .res-box.vnc { border: 3px solid var(--vnc-blue); background: #fdfdfd; }
-        .res-box h3 { margin-top: 0; font-size: 0.85rem; text-transform: uppercase; color: #888; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        
-        .price-display { font-size: 2rem; font-weight: 900; color: var(--danger); margin: 15px 0; }
-        .vnc .price-display { color: var(--success); }
+        .comparison { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
+        .res-box { background: white; padding: 20px; border-radius: 12px; border: 1px solid #eee; position: relative; }
+        .res-box.vnc { border: 2px solid var(--blue); background: #fdfdfd; }
+        .price { font-size: 1.8rem; font-weight: 800; color: var(--red); margin: 10px 0; }
+        .vnc .price { color: var(--green); }
+        .economy { background: #e8f5e9; color: #2e7d32; padding: 8px; border-radius: 5px; font-weight: bold; font-size: 0.8rem; text-align: center; margin-bottom: 10px; }
 
-        .economy-tag { background: #e8f5e9; color: #2e7d32; padding: 12px; border-radius: 8px; font-weight: 800; font-size: 0.9rem; margin-top: 10px; text-align: center; border: 1px solid #c8e6c9; }
+        .info-list { padding: 0; list-style: none; font-size: 0.8rem; }
+        .info-list li { padding: 5px 0; border-bottom: 1px solid #f4f4f4; }
+        .bad::before { content: "✕ "; color: var(--red); font-weight: bold; }
+        .good::before { content: "✓ "; color: var(--green); font-weight: bold; }
 
-        .info-list { padding: 15px 0 0 0; list-style: none; font-size: 0.85rem; }
-        .info-list li { padding: 8px 0; border-bottom: 1px solid #f9f9f9; display: flex; align-items: flex-start; line-height: 1.2; }
-        .bad::before { content: "✕ "; color: var(--danger); font-weight: 900; margin-right: 8px; }
-        .good::before { content: "✓ "; color: var(--success); font-weight: 900; margin-right: 8px; }
-
-        /* Footer */
-        .form-footer { background: var(--vnc-blue); padding: 35px; border-radius: 12px; margin-top: 30px; text-align: center; color: white; }
-        .form-footer h3 { font-size: 1.1rem; margin-bottom: 25px; text-transform: uppercase; line-height: 1.5; }
-        .form-footer input { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 8px; border: none; box-sizing: border-box; font-size: 1rem; }
-        
-        .btn-zap { background: var(--success); color: white; border: none; padding: 20px; width: 100%; border-radius: 8px; font-size: 1.1rem; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
-        .btn-zap:hover { background: #218838; transform: translateY(-2px); }
-        .alert-min { color: var(--danger); font-size: 0.8rem; font-weight: bold; margin-top: 8px; background: #ffebee; padding: 8px; border-radius: 5px; display: none; }
-
-        @media (max-width: 600px) { .comparison { grid-template-columns: 1fr; } .grid-bens { grid-template-columns: repeat(3, 1fr); } }
+        .footer { background: var(--blue); padding: 30px; border-radius: 12px; text-align: center; color: white; margin-top: 20px; }
+        .footer input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 6px; border: none; }
+        .btn-zap { background: var(--green); color: white; border: none; padding: 18px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .alert { color: var(--red); font-size: 0.8rem; font-weight: bold; background: #ffebee; padding: 10px; border-radius: 5px; display: none; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -70,110 +50,133 @@
 <div class="navbar"><h1>VNC Investimentos</h1></div>
 
 <div class="container">
-    <div class="selection-title">O QUE VOCÊ DESEJA ADQUIRIR?</div>
-    <div class="grid-bens">
-        <div class="card-bem active" onclick="setCat(this, 'Moto', 0.19, 0.40, 4500, true)">
-            <img src="https://images.pexels.com/photos/104842/bmw-vehicle-ride-bike-104842.jpeg?auto=compress&w=200">
-            <span>MOTOS</span>
+    <div class="grid-bens" id="gridBens">
+        <div class="card-bem active" data-nome="Moto" data-taxavnc="0.19" data-taxabanco="0.40" data-min="4500" data-veiculo="true">
+            <img src="https://images.pexels.com/photos/104842/bmw-vehicle-ride-bike-104842.jpeg?auto=compress&w=200"><span>MOTOS</span>
         </div>
-        <div class="card-bem" onclick="setCat(this, 'Carro', 0.21, 0.40, 4500, true)">
-            <img src="https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?auto=compress&w=200">
-            <span>CARROS</span>
+        <div class="card-bem" data-nome="Carro" data-taxavnc="0.21" data-taxabanco="0.40" data-min="4500" data-veiculo="true">
+            <img src="https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?auto=compress&w=200"><span>CARROS</span>
         </div>
-        <div class="card-bem" onclick="setCat(this, 'Serviços', 0.22, 0.40, 6000, false)">
-            <img src="https://images.pexels.com/photos/2219024/pexels-photo-2219024.jpeg?auto=compress&w=200">
-            <span>SERVIÇOS</span>
+        <div class="card-bem" data-nome="Serviços" data-taxavnc="0.22" data-taxabanco="0.40" data-min="6000" data-veiculo="false">
+            <img src="https://images.pexels.com/photos/2219024/pexels-photo-2219024.jpeg?auto=compress&w=200"><span>SERVIÇOS</span>
         </div>
-        <div class="card-bem" onclick="setCat(this, 'Imóvel / Fazenda', 0.25, 0.75, 20000, false)">
-            <img src="https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&w=200">
-            <span>IMÓVEIS</span>
+        <div class="card-bem" data-nome="Imóvel" data-taxavnc="0.25" data-taxabanco="0.75" data-min="20000" data-veiculo="false">
+            <img src="https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&w=200"><span>IMÓVEIS</span>
         </div>
-        <div class="card-bem" onclick="setCat(this, 'Maquinário', 0.25, 0.75, 20000, false)">
-            <img src="https://images.pexels.com/photos/259209/pexels-photo-259209.jpeg?auto=compress&w=200">
-            <span>TRATOR / MÁQ.</span>
+        <div class="card-bem" data-nome="Maquinário" data-taxavnc="0.25" data-taxabanco="0.75" data-min="20000" data-veiculo="false">
+            <img src="https://images.pexels.com/photos/259209/pexels-photo-259209.jpeg?auto=compress&w=200"><span>TRATOR</span>
         </div>
     </div>
 
     <div class="card-input">
         <div class="input-group">
-            <label>VALOR TOTAL DO BEM</label>
-            <div class="currency-input"><input type="number" id="vTotal" value="80000" oninput="calc()"></div>
+            <label>VALOR TOTAL</label>
+            <div class="cur-input"><input type="number" id="vTotal" value="80000"></div>
         </div>
         <div class="input-group">
-            <label>VALOR DA ENTRADA</label>
-            <div class="currency-input"><input type="number" id="vEntrada" value="10000" oninput="calc()"></div>
-            <div id="msgErroEntrada" class="alert-min">Entrada mínima não atingida.</div>
+            <label>ENTRADA</label>
+            <div class="cur-input"><input type="number" id="vEntrada" value="10000"></div>
+            <div id="erro" class="alert"></div>
         </div>
         <div class="input-group">
-            <label>PRAZO: <span id="txtPrazo" style="color:var(--vnc-light-blue)">48</span> MESES</label>
-            <input type="range" id="prazo" min="12" max="180" value="48" style="width: 100%; accent-color: var(--vnc-blue);" oninput="calc()">
+            <label>PRAZO: <span id="valPrazo">48</span> MESES</label>
+            <input type="range" id="prazo" min="12" max="120" value="48" style="width:100%">
         </div>
     </div>
 
     <div class="comparison">
         <div class="res-box">
-            <h3>Financiamento Bancário</h3>
-            <div class="price-display" id="resFinan">R$ 0,00</div>
-            <ul class="info-list" id="listaFinan"></ul>
+            <h3 style="font-size:0.8rem; margin:0">FINANCIAMENTO BANCÁRIO</h3>
+            <div class="price" id="resBanco">R$ 0,00</div>
+            <ul class="info-list" id="listBanco"></ul>
         </div>
         <div class="res-box vnc">
-            <h3>Plano Empresa VNC</h3>
-            <div class="price-display" id="resVNC">R$ 0,00</div>
-            <div class="economy-tag" id="economia">Você economiza: R$ 0,00</div>
+            <h3 style="font-size:0.8rem; margin:0">PLANO EMPRESA VNC</h3>
+            <div class="price" id="resVNC">R$ 0,00</div>
+            <div class="economy" id="economia">Economia: R$ 0,00</div>
             <ul class="info-list">
-                <li class="good"><b>Qualquer ano de fabricação</b></li>
-                <li class="good"><b>Aprovação com Score Baixo</b></li>
-                <li class="good"><b>Sem necessidade de CNH</b></li>
+                <li class="good">Qualquer ano de fabricação</li>
+                <li class="good">Aprovação Score Baixo</li>
+                <li class="good">Sem CNH e Sem burocracia</li>
             </ul>
         </div>
     </div>
 
-    <div class="form-footer">
+    <div class="footer">
         <h3>Marcar um horário com um dos consultores da VNC Investimentos</h3>
-        <input type="text" id="nome" placeholder="Seu Nome Completo">
-        <input type="tel" id="tel" placeholder="Seu WhatsApp">
-        <button class="btn-zap" id="btnAcao" onclick="enviar()">MARQUE UM HORÁRIO AGORA MESMO</button>
+        <input type="text" id="nome" placeholder="Nome Completo">
+        <input type="tel" id="tel" placeholder="WhatsApp">
+        <button class="btn-zap" onclick="enviar()">Marque um horário agora mesmo</button>
     </div>
 </div>
 
 <script>
-    // Variáveis de controle globais
-    let _catNome = "Moto";
-    let _taxaVNC = 0.19;
-    let _taxaFinan = 0.40;
-    let _minEntrada = 4500;
-    let _eVeiculo = true;
+    const vTotal = document.getElementById('vTotal');
+    const vEntrada = document.getElementById('vEntrada');
+    const prazo = document.getElementById('prazo');
+    const cards = document.querySelectorAll('.card-bem');
 
-    function setCat(el, nome, tV, tF, mE, veiculo) {
-        // Remove active de todos
-        document.querySelectorAll('.card-bem').forEach(c => c.classList.remove('active'));
-        el.classList.add('active');
+    function format(v) { return "R$ " + v.toLocaleString('pt-BR', {minimumFractionDigits: 2}); }
+
+    function calcular() {
+        const active = document.querySelector('.card-bem.active');
+        const tVNC = parseFloat(active.dataset.taxavnc);
+        const tBanco = parseFloat(active.dataset.taxabanco);
+        const minE = parseFloat(active.dataset.min);
+        const isVeiculo = active.dataset.veiculo === "true";
         
-        // Atualiza variáveis
-        _catNome = nome; _taxaVNC = tV; _taxaFinan = tF; _minEntrada = mE; _eVeiculo = veiculo;
-        
-        // Ajusta limite do prazo
-        let maxP = (nome.includes('Imóvel') || nome === 'Maquinário') ? 240 : 120;
-        document.getElementById('prazo').max = maxP;
-        
-        calc(); // Força recálculo
+        const vt = parseFloat(vTotal.value) || 0;
+        const ve = parseFloat(vEntrada.value) || 0;
+        const p = parseInt(prazo.value);
+        const saldo = vt - ve;
+
+        document.getElementById('valPrazo').innerText = p;
+
+        if (ve < minE) {
+            document.getElementById('erro').innerText = "Entrada mínima: " + format(minE);
+            document.getElementById('erro').style.display = "block";
+            document.getElementById('resVNC').innerText = "---";
+            document.getElementById('resBanco').innerText = "---";
+            return;
+        }
+        document.getElementById('erro').style.display = "none";
+
+        // VNC
+        const pVNC = (saldo + (vt * tVNC)) / p;
+        // BANCO (Sempre no mesmo prazo para comparar)
+        const pBanco = (saldo + (vt * tBanco)) / p;
+
+        document.getElementById('resVNC').innerText = format(pVNC);
+        document.getElementById('resBanco').innerText = format(pBanco);
+        document.getElementById('economia').innerText = "Economia Total: " + format((pBanco * p) - (pVNC * p));
+
+        // Lista Banco
+        let html = `<li class="bad">Nome Limpo e Score Alto</li><li class="bad">Alienação Bancária</li>`;
+        if(isVeiculo) html = `<li class="bad">Ano 2016 em diante</li><li class="bad">Exige CNH</li>` + html;
+        document.getElementById('listBanco').innerHTML = html;
     }
 
-    function formatarReal(v) {
-        return "R$ " + v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    cards.forEach(card => {
+        card.addEventListener('click', () => {
+            cards.forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
+            // Ajustar prazo máximo
+            prazo.max = (card.dataset.nome === "Imóvel" || card.dataset.nome === "Maquinário") ? 240 : 120;
+            calcular();
+        });
+    });
+
+    [vTotal, vEntrada, prazo].forEach(el => el.addEventListener('input', calcular));
+
+    function enviar() {
+        const n = document.getElementById('nome').value;
+        const t = document.getElementById('tel').value;
+        if(!n || !t) return alert("Preencha os dados!");
+        const msg = `Olá! Me chamo ${n}. Simulei um ${document.querySelector('.card-bem.active').dataset.nome} de ${format(parseFloat(vTotal.value))}. No Plano VNC ficou em ${prazo.value}x. Quero marcar um horário!`;
+        window.open(`https://wa.me/5599999999999?text=${encodeURIComponent(msg)}`);
     }
 
-    function calc() {
-        let vTotal = parseFloat(document.getElementById('vTotal').value) || 0;
-        let vEntrada = parseFloat(document.getElementById('vEntrada').value) || 0;
-        let p = parseInt(document.getElementById('prazo').value);
-        let saldo = vTotal - vEntrada;
-        
-        document.getElementById('txtPrazo').innerText = p;
-
-        // Validação de Entrada
-        if (vEntrada < _minEntrada) {
-            document.getElementById('msgErroEntrada').innerText = "Entrada mínima de " + formatarReal(_minEntrada) + " para " + _catNome;
-            document.getElementById('msgErroEntrada').style.display = 'block';
-            document.getElementById('btnAcao').disabled = true;
-            document.getElementById
+    window.onload = calcular;
+</script>
+</body>
+</html>
