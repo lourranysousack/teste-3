@@ -14,15 +14,13 @@
 
         body { font-family: 'Montserrat', sans-serif; background-color: #050505; color: #ffffff; margin: 0; padding: 0; }
         
-        /* Header Limpo - Sem Mão */
         .header { background: var(--dark); padding: 45px 10px; text-align: center; border-bottom: 2px solid var(--gold); }
         .header h1 { color: var(--gold); font-weight: 900; letter-spacing: 7px; margin: 0; font-size: 2.6rem; text-transform: uppercase; }
 
         .container { max-width: 900px; margin: 20px auto; padding: 0 15px; }
 
-        /* Grid de Categorias */
         .grid-bens { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 30px; }
-        .card-bem { background: var(--card-bg); border: 1px solid #222; border-radius: 10px; cursor: pointer; transition: 0.3s; overflow: hidden; text-align: center; display: flex; flex-direction: column; height: 190px; }
+        .card-bem { background: var(--card-bg); border: 1px solid #222; border-radius: 10px; cursor: pointer; transition: 0.3s; overflow: hidden; text-align: center; display: flex; flex-direction: column; height: 195px; }
         
         .card-bem img { width: 100%; height: 100px; object-fit: cover; border-bottom: 1px solid #222; }
         .card-info { padding: 10px 5px; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
@@ -31,7 +29,6 @@
         
         .card-bem.active { border: 2px solid var(--gold); transform: translateY(-3px); background: #1a1a1a; box-shadow: 0 5px 15px rgba(184, 147, 82, 0.2); }
 
-        /* Inputs */
         .main-card { background: var(--card-bg); padding: 25px; border-radius: 15px; border: 1px solid #222; margin-bottom: 25px; }
         .input-group { margin-bottom: 20px; }
         .input-group label { display: block; font-size: 0.8rem; color: var(--gold); margin-bottom: 8px; text-transform: uppercase; font-weight: bold; }
@@ -40,7 +37,6 @@
         .cur-input::before { content: "R$"; position: absolute; left: 15px; top: 14px; color: var(--gold); font-weight: bold; }
         .cur-input input { width: 100%; padding: 14px 14px 14px 45px; border-radius: 8px; border: 1px solid #333; background: #000; color: #fff; font-size: 1.2rem; box-sizing: border-box; outline: none; }
 
-        /* Comparativo */
         .comparison { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
         .res-box { background: #0a0a0a; padding: 25px; border-radius: 12px; border: 1px solid #222; }
         .res-box.vnc { border-color: var(--gold); background: #0d0d0d; }
@@ -49,16 +45,13 @@
         .vnc-price { color: var(--gold); }
         .eco-tag { color: var(--gold); font-size: 0.95rem; font-weight: bold; margin-top: 10px; display: block; border-top: 1px solid #222; padding-top: 10px; }
 
-        /* Rodapé de Contato */
         .footer-cta { background: var(--gold); padding: 30px; border-radius: 15px; text-align: center; color: #000; margin-top: 30px; }
         .footer-cta input { width: 100%; padding: 15px; margin-bottom: 12px; border-radius: 8px; border: none; box-sizing: border-box; font-size: 1rem; font-weight: bold; }
         .btn-final { width: 100%; padding: 20px; background: #000; color: var(--gold); border: none; border-radius: 8px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 1.1rem; transition: 0.3s; }
-        .btn-final:hover { transform: scale(1.02); }
 
         @media (max-width: 600px) {
             .grid-bens { grid-template-columns: repeat(2, 1fr); gap: 10px; }
             .header h1 { font-size: 1.9rem; letter-spacing: 4px; }
-            .card-bem { height: 180px; }
         }
     </style>
 </head>
@@ -144,26 +137,4 @@
     function calc() {
         let vt = parseFloat(document.getElementById('vTotal').value) || 0;
         let ve = parseFloat(document.getElementById('vEntrada').value) || 0;
-        let p = parseInt(document.getElementById('prazo').value);
-        document.getElementById('txtPrazo').innerText = p;
-
-        let vVNC = ((vt - ve) + (vt * _tVNC)) / p;
-        let vBanc = ((vt - ve) + (vt * _tBanc)) / p;
-
-        document.getElementById('resVNC').innerText = format(vVNC);
-        document.getElementById('resBanco').innerText = format(vBanc);
-        document.getElementById('economia').innerText = "Economia Estimada: " + format((vBanc * p) - (vVNC * p));
-    }
-
-    function enviar() {
-        let n = document.getElementById('nome').value;
-        let t = document.getElementById('tel').value;
-        if(!n || !t) return alert("Por favor, preencha os dados de contato!");
-        let vt = format(parseFloat(document.getElementById('vTotal').value));
-        let msg = `Olá! Sou ${n}. Simulei um plano de ${vt} para ${_cat} no simulador VIDA NOVA e gostaria de atendimento.`;
-        window.open(`https://wa.me/5599999999999?text=${encodeURIComponent(msg)}`);
-    }
-    window.onload = calc;
-</script>
-</body>
-</html>
+        let p =
