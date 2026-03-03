@@ -154,14 +154,18 @@
         let n = document.getElementById('nomeUser').value;
         let t = document.getElementById('telUser').value;
         if(!n || !t) { alert("Por favor, preencha os dados de contato!"); return; }
+        
         let vt = format(parseFloat(document.getElementById('vTotal').value) || 0);
         let pV = document.getElementById('resVNC').innerText;
         let prazo = document.getElementById('prazo').value;
+        
+        // Mensagem sem "Teste 3" e focada na VIDA NOVA
         let msg = `Olá! Sou o(a) ${n}. Acabei de realizar uma simulação no simulador *VIDA NOVA*.%0A%0A` +
                   `*Categoria:* ${_cat}%0A` +
                   `*Crédito:* ${vt}%0A` +
                   `*Plano VIDA NOVA:* ${prazo}x de ${pV}%0A%0A` +
-                  `Gostaria de falar com um consultor.`;
+                  `Gostaria de agendar um atendimento para entender melhor o plano.`;
+
         window.open(`https://wa.me/5563920019173?text=${msg}`);
     }
     window.onload = calc;
